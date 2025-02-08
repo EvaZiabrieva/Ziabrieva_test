@@ -7,7 +7,8 @@ public abstract class BaseHook
     protected BaseHookView _view;
     public BaseHookView View => _view;
 
-    public abstract void SetDistance(float reeledDistance);
+    public abstract void UpdateOffset(float reeledDistance);
+    public abstract void Cast(Vector3 direction, float force);
 }
 
 

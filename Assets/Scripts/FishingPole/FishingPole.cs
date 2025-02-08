@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class FishingPole : MonoBehaviour
@@ -16,6 +17,9 @@ public class FishingPole : MonoBehaviour
     public BaseFishingReel FishingReel =>  _fishingReel;
     public BasePole Pole => _pole;
 
+    public event Action OnGrabAction;
+    public event Action OnDropAction;
+
     public void Initialize(BaseHook hook, BaseBobber bobber, BaseFishingLine fishingLine,
                                               BaseFishingReel fishingReel, BasePole pole,
                                               BaseFishingPoleController fishingPoleController)
@@ -28,5 +32,20 @@ public class FishingPole : MonoBehaviour
         _fishingPoleController = fishingPoleController;
 
         isInitialized = true;
+    }
+    public void OnGrab()
+    {
+        OnGrabAction?.Invoke();
+        SystemsContainer.GetSystem<UpdatableSystem>().RegisterUpdatable(_fishingPoleController);
+    }
+    public void OnDrop()
+    {
+        OnDropAction?.Invoke();
+        SystemsContainer.GetSystem<UpdatableSystem>().UnRegisterUpdatable(_fishingPoleController);
+    }
+
+    public void Activate()
+    {
+        Debug.Log("Activated");
     }
 }

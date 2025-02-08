@@ -1,3 +1,5 @@
+using System.Numerics;
+
 public abstract class BasePole
 {
     protected float _stregth;

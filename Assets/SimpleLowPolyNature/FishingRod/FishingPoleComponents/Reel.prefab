@@ -247,7 +247,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a6d79b0d9f36477489c65688135d0671, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <RotationComponentParent>k__BackingField: {fileID: 8125460550850629148}
+  <Handle>k__BackingField: {fileID: 0}
 --- !u!135 &7203741627767637986
 SphereCollider:
   m_ObjectHideFlags: 0
