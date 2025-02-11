@@ -4,15 +4,36 @@ using UnityEngine;
 
 public class FishInteractionSystem : MonoBehaviour, ISystem
 {
-    public bool IsInitialized => throw new System.NotImplementedException();
+    [SerializeField] private List<BaseFish> _fishes;
+    #region CONFIGS
+    [SerializeField] private FishData _fishData;
+    [SerializeField] private FishView _fishView;
+    [SerializeField] private RangeFloat _bitDelayRange;
+    [SerializeField] private RangeInt _bitesCount;
+    #endregion
+
+    private FishFactory _factory;
+    public bool IsInitialized => _fishes != null;
 
     public void Initialize()
     {
-        throw new System.NotImplementedException();
+        _fishes = new List<BaseFish>();
+        _factory = new FishFactory();
     }
 
     public void Shutdown()
     {
-        throw new System.NotImplementedException();
+        _fishes = null;
     }
+
+    public void SetupFishBehaviour(BaseBait bait)
+    {
+        // TODO: create configs system, choose random fish
+        Fish fish = _factory.CreateFish(_fishData, _fishView);
+        float delay = Random.Range(_bitDelayRange.min, _bitDelayRange.max) / bait.AttractivenessStrenght;
+
+        int bitesCount = Random.Range(_bitesCount.min, _bitesCount.max + 1);
+    }
+
+    
 }
