@@ -2,38 +2,55 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class FishingPoleController : BaseFishingPoleController
 {
-    private bool _isCasting = false;
     private Vector3 _castingDirection;
     private float _castingSpeed;
+    private InputSystem _inputSystem;
+    private InputAction _castingInput;
+
     public FishingPoleController(FishingPole pole, CastingTracker tracker) : base(pole, tracker) 
     {
-        pole.OnGrabAction += tracker.OnGrabHandler;
-        pole.OnDropAction += tracker.OnDropHandler;
+        _inputSystem = SystemsContainer.GetSystem<InputSystem>();
+        _castingInput = _inputSystem.GetInputAction(Inputs.CASTING_NAME);
+
+        _castingInput.started += AddSubscriber;
     }
 
     public override void Update()
-    {  
-        Debug.Log($"Tracker distance: {_castingTracker.TrackedDistance}");
+    {
+        _fishingPole.FishingLine.View.SetLenght(GetCurrentLenght());
+        _fishingPole.Bobber.UpdateOffset(GetCurrentLenght());
 
-        if(_castingTracker.TrackedDistance >= _trackedDistanceTreshold && !_isCasting)
+        if (_castingInput.IsPressed())
         {
-            _isCasting = true;
-            _castingDirection = _fishingPole.transform.forward + _fishingPole.transform.up;
-            _castingSpeed = _castingTracker.TrackedDistance * 2;
+            if (_castingTracker.TrackedDistance >= _trackedDistanceTreshold)
+            {
+                _fishingPole.FishingReel.SetAngle(_fishingPole.FishingLine.View.MaxLength * 360);
+                _castingDirection = _fishingPole.transform.forward + _fishingPole.transform.up;
+                _castingSpeed = _castingTracker.TrackedDistance * _fishingPole.CastingSensitivity;
+                _fishingPole.Bobber.Cast(_castingDirection, _castingSpeed);
+                RemoveSubscriber();
+            }
         }
+    }
+    private float GetCurrentLenght() =>
+        (_fishingPole.FishingReel.GetAngle() / 360) * _fishingPole.FishingReel.RoundLenght;
 
-        if(_isCasting)
-        {
-            _fishingPole.Hook.Cast(_castingDirection, _castingSpeed);
-        }
+    private void AddSubscriber(InputAction.CallbackContext callbackContext)
+    {
+        _castingTracker.OnBeforeCast();
+    }
+
+    private void RemoveSubscriber()
+    {
+        _castingTracker.OnAfterCast();
     }
 
     public void Shutdown()
     {
-        _fishingPole.OnGrabAction -= _castingTracker.OnGrabHandler;
-        _fishingPole.OnDropAction -= _castingTracker.OnDropHandler;
+        _castingInput.started -= AddSubscriber;
     }
 }

@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class BobberView : BaseBobberView
 {
+    public BobberView(BobberVisualsContainer bobberVisualsContainer) : base(bobberVisualsContainer) { }
+
     public override void OnAfterBit()
     {
         

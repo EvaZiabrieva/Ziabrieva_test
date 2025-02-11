@@ -12,10 +12,13 @@ public class FishingReel : BaseFishingReel
         _knob = knob;
         _roundLenght = roundLenght;
     }
-    public override float GetAngle() => _knob.value * _roundLenght;
+    public override float GetAngle() => Mathf.Lerp(_knob.minAngle, _knob.maxAngle, _knob.value);
 
-    public override void ReelOnCast(Vector3 direction, float force)
+    public override float SetAngle(float angle) => _knob.value = angle;
+
+    public override void SetRange(float minAngle, float maxAngle)
     {
-        
+        _knob.minAngle = minAngle;
+        _knob.maxAngle = maxAngle;
     }
 }

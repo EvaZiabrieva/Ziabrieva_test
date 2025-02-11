@@ -1,16 +1,20 @@
 using System;
+using TMPro;
 using UnityEngine;
+using UnityEngine.XR.Interaction.Toolkit;
 
-public class FishingPole : MonoBehaviour
+public class FishingPole : MonoBehaviour, IGrabable
 {
+    [SerializeField] private float _castingSensitivity;
     private BaseHook _hook;
     private BaseBobber _bobber;
     private BaseFishingLine _fishingLine;
     private BaseFishingReel _fishingReel;
     private BasePole _pole;
+    private GrabableSystem _grabableSystem;
+    public float CastingSensitivity => _castingSensitivity;
 
     private BaseFishingPoleController _fishingPoleController;
-    private bool isInitialized = false;
     public BaseHook Hook => _hook;
     public BaseBobber Bobber => _bobber;
     public BaseFishingLine FishingLine => _fishingLine;
@@ -31,21 +35,26 @@ public class FishingPole : MonoBehaviour
         _pole = pole;
         _fishingPoleController = fishingPoleController;
 
-        isInitialized = true;
+        _hook.AttachDetector.enabled = false;
+        _fishingReel.SetRange(0, 360 * (_fishingLine.View.MaxLength / _fishingReel.RoundLenght));
+
+        _grabableSystem = SystemsContainer.GetSystem<GrabableSystem>();
     }
+
     public void OnGrab()
     {
         OnGrabAction?.Invoke();
         SystemsContainer.GetSystem<UpdatableSystem>().RegisterUpdatable(_fishingPoleController);
+
+        _grabableSystem.OnAttachableGrab += _hook.CheckForAttach;
+        _grabableSystem.OnAttachableDrop += _hook.SetDefault;
     }
     public void OnDrop()
     {
         OnDropAction?.Invoke();
         SystemsContainer.GetSystem<UpdatableSystem>().UnRegisterUpdatable(_fishingPoleController);
-    }
 
-    public void Activate()
-    {
-        Debug.Log("Activated");
+        _grabableSystem.OnAttachableGrab -= _hook.CheckForAttach;
+        _grabableSystem.OnAttachableDrop -= _hook.SetDefault;
     }
 }

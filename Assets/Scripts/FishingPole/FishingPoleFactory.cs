@@ -27,14 +27,15 @@ public class FishingPoleFactory
 
     private GameObject _poleObject;
     private GameObject _hookObject;
+    private Rigidbody _bobberRigidbody;
     private PoleVisualsContainer _poleVisualsContainer;
     public void CreateFishingPole(GameObject pole, GameObject fishingReel, GameObject fishingLine,
                                   GameObject hook, GameObject bobber, Transform spawnPoint)
     {
         CreatePole(pole, spawnPoint.position);
         CreateReel(fishingReel, _poleVisualsContainer.ReelPlacement.position);
-        CreateHook(hook, _poleVisualsContainer.HookPlacement.position);
         CreateBobber(bobber, _poleVisualsContainer.BobberPlacement.position);
+        CreateHook(hook, _poleVisualsContainer.HookPlacement.position);
         CreateFishingLine(fishingLine, _poleVisualsContainer.FishingLinePlacement.position);
 
         _fishingPole = _poleObject.GetComponent<FishingPole>();
@@ -71,19 +72,26 @@ public class FishingPoleFactory
         _hookObject = GameObject.Instantiate(hook, spawnPoint, Quaternion.identity);
         HookVisualsContainer hookVisualsContainer = _hookObject.GetComponent<HookVisualsContainer>();
 
-        Rigidbody connectedRigidbody = GameObject.Instantiate(hookVisualsContainer.HookJointPoint, spawnPoint, Quaternion.identity, _poleObject.transform);
         ConfigurableJoint configurableJoint = _hookObject.GetComponent<ConfigurableJoint>();
-        configurableJoint.connectedBody = connectedRigidbody;
+        configurableJoint.connectedBody = _bobberRigidbody;
         Rigidbody hoohRigidbody = _hookObject.GetComponent<Rigidbody>();
+        AttachDetector attachDetector = _hookObject.GetComponent<AttachDetector>();
 
         _hookView = new HookView(hookVisualsContainer);
-        _hook = new Hook(1, 0.3f, _hookView, configurableJoint, hoohRigidbody);
+        _hook = new Hook(1, 0.3f, _hookView, configurableJoint, hoohRigidbody, attachDetector);
     }
     private void CreateBobber(GameObject bobber, Vector3 spawnPoint)
     {
-        GameObject.Instantiate(bobber, spawnPoint, Quaternion.identity, _poleObject.transform);
-        _bobberView = new BobberView();
-        _bobber = new Bobber(_bobberView);
+        GameObject bobberObject = GameObject.Instantiate(bobber, spawnPoint, Quaternion.identity);
+        BobberVisualsContainer bobberVisualsContainer = bobberObject.GetComponent<BobberVisualsContainer>();
+
+        Rigidbody connectedRigidbody = GameObject.Instantiate(bobberVisualsContainer.BobberJointPoint, spawnPoint, Quaternion.identity, _poleObject.transform);
+        ConfigurableJoint configurableJoint = bobberObject.GetComponent<ConfigurableJoint>();
+        configurableJoint.connectedBody = connectedRigidbody;
+        _bobberRigidbody = bobberObject.GetComponent<Rigidbody>();
+
+        _bobberView = new BobberView(bobberVisualsContainer);
+        _bobber = new Bobber(_bobberView, configurableJoint, _bobberRigidbody);
     }
     private void CreateFishingLine(GameObject fishingLine, Vector3 spawnPoint)
     {
@@ -96,8 +104,8 @@ public class FishingPoleFactory
         };
         LineRenderer lineRenderer = lineObject.GetComponent<LineRenderer>();
 
-        _fishingLineView = new FishingLineView(pointsData, lineRenderer);
-        _fishingLine = new FishingLine(5, 1, 10, _fishingLineView);
+        _fishingLineView = new FishingLineView(pointsData, lineRenderer, 10);
+        _fishingLine = new FishingLine(10, 0, 10, _fishingLineView);
     }
 
     private CastingTracker CreateCastingTracker()

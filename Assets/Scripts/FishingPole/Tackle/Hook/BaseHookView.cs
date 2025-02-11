@@ -11,9 +11,10 @@ public abstract class BaseHookView
         _hookVisualsContainer = prefab;
     }
 
-    public abstract void Initialize(Vector3 spawnPosition);
-
     public abstract void Attach(IHookAttachable attachable);
+    public abstract void SetReadyToAttachVisual();
+    public abstract void SetNotReadyToAttachVisual();
+    public abstract void SetDefaultVisual();
 
     public abstract void RemoveAttachment();
 }

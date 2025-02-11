@@ -18,7 +18,6 @@ public class CastingTracker : IUpdatable
 
         //TODO: get value from configs
         _fixedTimeStep = 0.1f;
-        SystemsContainer.GetSystem<UpdatableSystem>().RegisterUpdatable(this);
     }
 
     public void Update()
@@ -31,11 +30,15 @@ public class CastingTracker : IUpdatable
         }
     }
 
-    public void OnGrabHandler()
+    public void OnBeforeCast()
     {
+        _trackedPosition = _trackerTransform.position;
+        SystemsContainer.GetSystem<UpdatableSystem>().RegisterUpdatable(this);
     }
 
-    public void OnDropHandler()
+    public void OnAfterCast()
     {
+        _trackedPosition = _trackerTransform.position;
+        SystemsContainer.GetSystem<UpdatableSystem>().UnRegisterUpdatable(this);
     }
 }

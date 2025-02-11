@@ -209,6 +209,7 @@ GameObject:
   - component: {fileID: 1399828959810168157}
   - component: {fileID: 305449918097280606}
   - component: {fileID: 7203741627767637986}
+  - component: {fileID: 8581381435431132379}
   m_Layer: 0
   m_Name: Reel
   m_TagString: Untagged
@@ -247,7 +248,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a6d79b0d9f36477489c65688135d0671, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <Handle>k__BackingField: {fileID: 0}
+  <Handle>k__BackingField: {fileID: 291057354093193816}
 --- !u!135 &7203741627767637986
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -261,6 +262,24 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 0.33417016
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &8581381435431132379
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6085218086949009369}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  outlineMode: 1
+  outlineColor: {r: 1, g: 1, b: 1, a: 1}
+  outlineWidth: 5
+  precomputeOutline: 0
+  bakeKeys: []
+  bakeValues: []
 --- !u!1 &6677974703689792250
 GameObject:
   m_ObjectHideFlags: 0
@@ -531,10 +550,34 @@ MonoBehaviour:
       m_Calls: []
   m_HoverEntered:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 8581381435431132379}
+        m_TargetAssemblyTypeName: UnityEngine.Behaviour, UnityEngine
+        m_MethodName: set_enabled
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
   m_HoverExited:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 8581381435431132379}
+        m_TargetAssemblyTypeName: UnityEngine.Behaviour, UnityEngine
+        m_MethodName: set_enabled
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   m_FirstSelectEntered:
     m_PersistentCalls:
       m_Calls: []
@@ -597,7 +640,7 @@ MonoBehaviour:
       m_Calls: []
   m_Handle: {fileID: 6311680354456159299}
   m_Value: 0
-  m_ClampedMotion: 0
+  m_ClampedMotion: 1
   m_MaxAngle: 360
   m_MinAngle: 0
   m_AngleIncrement: 0

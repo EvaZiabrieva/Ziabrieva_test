@@ -5,25 +5,32 @@ using UnityEngine;
 public class HookView : BaseHookView
 {
     public HookView(HookVisualsContainer hookVisualsContainer) : base(hookVisualsContainer) { }
-    public override void Initialize(Vector3 spawnPosition)
-    {
-        _hookVisualsContainer = GameObject.Instantiate(_hookVisualsContainer, spawnPosition, Quaternion.identity);
-    }
 
     public override void Attach(IHookAttachable attachable)
     {
+        attachable.OnAttach();
+
         _hookAttachable = attachable;
-        _attachableVisuals = PoolsContainer.GetFromPool(attachable.Visuals);
+        _attachableVisuals = attachable.Visuals;
         _attachableVisuals.transform.position = _hookVisualsContainer.SnapPlacement.position;
+        _attachableVisuals.transform.SetParent(_hookVisualsContainer.SnapPlacement);
     }
 
-    public override void RemoveAttachment()
+    public override void RemoveAttachment() { }
+
+    public override void SetReadyToAttachVisual()
     {
-        if (_hookAttachable == null)
-            return;
-
-        PoolsContainer.ReturnToPool(_hookAttachable.Visuals, _attachableVisuals);
-        _hookAttachable = null;
-        _attachableVisuals = null;
+        _hookVisualsContainer.Outline.enabled = true;
+        _hookVisualsContainer.Outline.OutlineColor = _hookVisualsContainer.CanAttachColor;
     }
+
+
+    public override void SetNotReadyToAttachVisual() 
+    {
+        _hookVisualsContainer.Outline.enabled = true;
+        _hookVisualsContainer.Outline.OutlineColor = _hookVisualsContainer.CanNotAttachColor;
+    }
+
+    public override void SetDefaultVisual() =>
+        _hookVisualsContainer.Outline.enabled = false;
 }

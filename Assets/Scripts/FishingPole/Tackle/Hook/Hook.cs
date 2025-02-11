@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Hook : BaseHook
@@ -7,10 +8,8 @@ public class Hook : BaseHook
     private ConfigurableJoint _joint;
     private SoftJointLimit currentLimit;
     private Rigidbody _rigidbody;
-    private bool isCasted = false;
-    private float _castingTimer;
 
-    public Hook(float baitCapacity, float failChance, BaseHookView hookView, ConfigurableJoint joint, Rigidbody rigidbody)
+    public Hook(float baitCapacity, float failChance, BaseHookView hookView, ConfigurableJoint joint, Rigidbody rigidbody, AttachDetector attachDetector)
     {
         //TODO: get values from configs
         _baitCapacity = baitCapacity;
@@ -18,40 +17,41 @@ public class Hook : BaseHook
         _view = hookView;
         _joint = joint;
         _rigidbody = rigidbody;
+        _attachDetector = attachDetector;
+        _currentBaitCapacity = 0;
     }
 
-    public override void Cast(Vector3 direction, float force)
+    public override void CheckForAttach()
     {
-        _castingTimer += Time.deltaTime;
-        _rigidbody.isKinematic = true;
-        _joint.xMotion = ConfigurableJointMotion.Free;
-        _joint.yMotion = ConfigurableJointMotion.Free;
-        _joint.zMotion = ConfigurableJointMotion.Free;
+        if (_currentBaitCapacity < _baitCapacity)
+        {
+            _attachDetector.enabled = true;
+            _attachDetector.OnAttach += _view.Attach;
+            _attachDetector.OnAttach += ChangeCapacity;
 
-        _rigidbody.transform.position += (direction * force) * Time.deltaTime + Physics.gravity * _castingTimer * _castingTimer / 2f;
+            _view.SetReadyToAttachVisual();
+        }
+        else
+        {
+            if(_attachDetector.enabled)
+            {
+                _attachDetector.enabled = false;
+                _attachDetector.OnAttach -= _view.Attach;
+                _attachDetector.OnAttach -= ChangeCapacity;
+            }
 
-        //CastLogic(direction, force);
-    }
-    private void CastLogic(Vector3 direction, float force)
-    {
-
-        //if (!isCasted)
-        //{
-        //    isCasted = true;
-        //    _rigidbody.velocity = Vector3.zero;
-        //
-        //    _joint.xMotion = ConfigurableJointMotion.Free;
-        //    _joint.yMotion = ConfigurableJointMotion.Free;
-        //    _joint.zMotion = ConfigurableJointMotion.Free;
-        //
-        //    _rigidbody.AddForce(direction * force, ForceMode.Impulse);
-        //}
+            _view.SetNotReadyToAttachVisual();
+        }
     }
 
-    public override void UpdateOffset(float reeledDistance)
+    public override void SetDefault()
     {
-        currentLimit = new SoftJointLimit();
-        currentLimit.limit = reeledDistance;
-        _joint.linearLimit = currentLimit;
+        _attachDetector.enabled = false;
+        _attachDetector.OnAttach -= _view.Attach;
+        _view.SetDefaultVisual();
+    }
+    private void ChangeCapacity(IHookAttachable attachable)
+    {
+        _currentBaitCapacity++;
     }
 }

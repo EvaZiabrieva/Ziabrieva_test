@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3896563636067248339}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: HookTranform
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -40,7 +40,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7708671444535225478}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: SnapPlacement
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -73,7 +73,8 @@ GameObject:
   - component: {fileID: 7252704559432307845}
   - component: {fileID: 5327125252070475663}
   - component: {fileID: 4065022163867111168}
-  m_Layer: 0
+  - component: {fileID: 4000211260411634046}
+  m_Layer: 6
   m_Name: Hook
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -147,6 +148,19 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!135 &4000211260411634046
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6038949710772412476}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.16603732
+  m_Center: {x: -0.0029720068, y: -0.595056, z: 2.9390218}
 --- !u!1 &7540366274896184795
 GameObject:
   m_ObjectHideFlags: 0
@@ -160,7 +174,9 @@ GameObject:
   - component: {fileID: 3231346160672697537}
   - component: {fileID: 1788146739737338577}
   - component: {fileID: 7368565478338842762}
-  m_Layer: 0
+  - component: {fileID: 9213827900095643963}
+  - component: {fileID: 6269159662479601434}
+  m_Layer: 6
   m_Name: Hook
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -191,7 +207,7 @@ SphereCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7540366274896184795}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.24505544
@@ -209,7 +225,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <SnapPlacement>k__BackingField: {fileID: 7708671444535225478}
-  <HookJointPoint>k__BackingField: {fileID: 2646574180130722286, guid: fe83897be2a452840b49b36767333850, type: 3}
+  <HookJointPoint>k__BackingField: {fileID: 2646574180130722286, guid: e5eb4f80d3d62a54f94caec48e97e730, type: 3}
+  <Outline>k__BackingField: {fileID: 6269159662479601434}
+  <CanAttachColor>k__BackingField: {r: 0, g: 1, b: 0.30938816, a: 1}
+  <CanNotAttachColor>k__BackingField: {r: 1, g: 0, b: 0, a: 1}
 --- !u!54 &1788146739737338577
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -251,7 +270,7 @@ ConfigurableJoint:
     spring: 0
     damper: 0
   m_LinearLimit:
-    limit: 1
+    limit: 0.1
     bounciness: 0
     contactDistance: 0
   m_AngularXLimitSpring:
@@ -322,3 +341,33 @@ ConfigurableJoint:
   m_EnablePreprocessing: 1
   m_MassScale: 1
   m_ConnectedMassScale: 1
+--- !u!114 &9213827900095643963
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7540366274896184795}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c263aed88c423cc4dbe7776755051b8f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &6269159662479601434
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7540366274896184795}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  outlineMode: 1
+  outlineColor: {r: 1, g: 1, b: 1, a: 1}
+  outlineWidth: 5
+  precomputeOutline: 0
+  bakeKeys: []
+  bakeValues: []

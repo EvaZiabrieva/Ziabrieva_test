@@ -59,7 +59,7 @@ public class ObjectPool : IDisposable
 
 public static class PoolsContainer
 {
-    private static Dictionary<GameObject, ObjectPool> _pools;
+    private static Dictionary<GameObject, ObjectPool> _pools = new();
 
     public static GameObject GetFromPool(GameObject prefab)
     {

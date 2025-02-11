@@ -12,7 +12,7 @@ public class FishingLineView : BaseFishingLineView, IUpdatable
     private Vector3 _middlePoint;
     private List<Vector3> pointsList;
     private int vertexCount = 12;
-    public FishingLineView(PointsData pointsData, LineRenderer lineRenderer)
+    public FishingLineView(PointsData pointsData, LineRenderer lineRenderer, float maxLenght) : base(maxLenght)
     {
         _lineRenderer = lineRenderer;
         _pointsData = pointsData;
