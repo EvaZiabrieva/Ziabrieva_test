@@ -11,6 +11,8 @@ public abstract class BaseHook
     public AttachDetector AttachDetector => _attachDetector;
     public float BaitCapacity => _baitCapacity;
     public float CurrentBaitCapacity => _currentBaitCapacity;
+    public abstract void Initialize();
+    public abstract void Shutdown();
     public abstract void CheckForAttach();
     public abstract void SetDefault();
 }

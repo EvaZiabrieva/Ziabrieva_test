@@ -11,18 +11,16 @@ public class FishingPole : MonoBehaviour, IGrabable
     private BaseFishingLine _fishingLine;
     private BaseFishingReel _fishingReel;
     private BasePole _pole;
-    private GrabableSystem _grabableSystem;
-    public float CastingSensitivity => _castingSensitivity;
 
+    private UpdatableSystem _updatableSystem;
     private BaseFishingPoleController _fishingPoleController;
+
+    public float CastingSensitivity => _castingSensitivity;
     public BaseHook Hook => _hook;
     public BaseBobber Bobber => _bobber;
     public BaseFishingLine FishingLine => _fishingLine;
     public BaseFishingReel FishingReel =>  _fishingReel;
     public BasePole Pole => _pole;
-
-    public event Action OnGrabAction;
-    public event Action OnDropAction;
 
     public void Initialize(BaseHook hook, BaseBobber bobber, BaseFishingLine fishingLine,
                                               BaseFishingReel fishingReel, BasePole pole,
@@ -37,24 +35,17 @@ public class FishingPole : MonoBehaviour, IGrabable
 
         _hook.AttachDetector.enabled = false;
         _fishingReel.SetRange(0, 360 * (_fishingLine.View.MaxLength / _fishingReel.RoundLenght));
-
-        _grabableSystem = SystemsContainer.GetSystem<GrabableSystem>();
+        _updatableSystem = SystemsContainer.GetSystem<UpdatableSystem>();
     }
 
     public void OnGrab()
     {
-        OnGrabAction?.Invoke();
-        SystemsContainer.GetSystem<UpdatableSystem>().RegisterUpdatable(_fishingPoleController);
-
-        _grabableSystem.OnAttachableGrab += _hook.CheckForAttach;
-        _grabableSystem.OnAttachableDrop += _hook.SetDefault;
+        _updatableSystem.RegisterUpdatable(_fishingPoleController);
+        _hook.Initialize();
     }
     public void OnDrop()
     {
-        OnDropAction?.Invoke();
-        SystemsContainer.GetSystem<UpdatableSystem>().UnRegisterUpdatable(_fishingPoleController);
-
-        _grabableSystem.OnAttachableGrab -= _hook.CheckForAttach;
-        _grabableSystem.OnAttachableDrop -= _hook.SetDefault;
+        _updatableSystem.UnRegisterUpdatable(_fishingPoleController);
+        _hook.Shutdown();
     }
 }

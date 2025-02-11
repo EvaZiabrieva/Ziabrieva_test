@@ -8,6 +8,7 @@ public class Hook : BaseHook
     private ConfigurableJoint _joint;
     private SoftJointLimit currentLimit;
     private Rigidbody _rigidbody;
+    private GrabableSystem _grabableSystem;
 
     public Hook(float baitCapacity, float failChance, BaseHookView hookView, ConfigurableJoint joint, Rigidbody rigidbody, AttachDetector attachDetector)
     {
@@ -19,6 +20,25 @@ public class Hook : BaseHook
         _rigidbody = rigidbody;
         _attachDetector = attachDetector;
         _currentBaitCapacity = 0;
+
+        _grabableSystem = SystemsContainer.GetSystem<GrabableSystem>();
+    }
+    public override void Initialize()
+    {
+        _attachDetector.OnAttach += _view.Attach;
+        _attachDetector.OnAttach += OnAttachHandler;
+
+        _grabableSystem.OnAttachableGrab += CheckForAttach;
+        _grabableSystem.OnAttachableDrop += SetDefault;
+    }
+
+    public override void Shutdown()
+    {
+        _attachDetector.OnAttach -= _view.Attach;
+        _attachDetector.OnAttach -= OnAttachHandler;
+
+        _grabableSystem.OnAttachableGrab -= CheckForAttach;
+        _grabableSystem.OnAttachableDrop -= SetDefault;
     }
 
     public override void CheckForAttach()
@@ -26,20 +46,10 @@ public class Hook : BaseHook
         if (_currentBaitCapacity < _baitCapacity)
         {
             _attachDetector.enabled = true;
-            _attachDetector.OnAttach += _view.Attach;
-            _attachDetector.OnAttach += ChangeCapacity;
-
             _view.SetReadyToAttachVisual();
         }
         else
         {
-            if(_attachDetector.enabled)
-            {
-                _attachDetector.enabled = false;
-                _attachDetector.OnAttach -= _view.Attach;
-                _attachDetector.OnAttach -= ChangeCapacity;
-            }
-
             _view.SetNotReadyToAttachVisual();
         }
     }
@@ -47,11 +57,12 @@ public class Hook : BaseHook
     public override void SetDefault()
     {
         _attachDetector.enabled = false;
-        _attachDetector.OnAttach -= _view.Attach;
         _view.SetDefaultVisual();
     }
-    private void ChangeCapacity(IHookAttachable attachable)
+
+    private void OnAttachHandler(IHookAttachable attachable)
     {
         _currentBaitCapacity++;
+        _attachDetector.enabled = false;
     }
 }
