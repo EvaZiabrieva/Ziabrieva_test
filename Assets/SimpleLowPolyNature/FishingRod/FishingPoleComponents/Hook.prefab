@@ -126,7 +126,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: -1134714066672644336, guid: 74cdc2b906e91eb47bbd565ba815359d, type: 3}
+  - {fileID: 3742417907281132940, guid: 7dd5284b5d4ffb44d881b1788df37bac, type: 3}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -176,6 +176,7 @@ GameObject:
   - component: {fileID: 7368565478338842762}
   - component: {fileID: 9213827900095643963}
   - component: {fileID: 6269159662479601434}
+  - component: {fileID: 6588540948262899800}
   m_Layer: 6
   m_Name: Hook
   m_TagString: Untagged
@@ -371,3 +372,18 @@ MonoBehaviour:
   precomputeOutline: 0
   bakeKeys: []
   bakeValues: []
+--- !u!114 &6588540948262899800
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7540366274896184795}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0f5ec4849c2f3cc45b2a596162c65b12, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  layerMask:
+    serializedVersion: 2
+    m_Bits: 16

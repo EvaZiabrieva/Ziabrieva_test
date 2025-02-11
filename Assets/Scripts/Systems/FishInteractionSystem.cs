@@ -10,10 +10,14 @@ public class FishInteractionSystem : MonoBehaviour, ISystem
     [SerializeField] private FishView _fishView;
     [SerializeField] private RangeFloat _bitDelayRange;
     [SerializeField] private RangeInt _bitesCount;
+    [SerializeField] private RangeFloat _bitesDelay;
     #endregion
 
     private FishFactory _factory;
     public bool IsInitialized => _fishes != null;
+
+    public event System.Action OnFishBitTheBait;
+    public event System.Action OnFishBit;
 
     public void Initialize()
     {
@@ -26,14 +30,34 @@ public class FishInteractionSystem : MonoBehaviour, ISystem
         _fishes = null;
     }
 
-    public void SetupFishBehaviour(BaseBait bait)
+    public void SetupFishBehaviour(List<BaseBait> baits)
     {
         // TODO: create configs system, choose random fish
         Fish fish = _factory.CreateFish(_fishData, _fishView);
-        float delay = Random.Range(_bitDelayRange.min, _bitDelayRange.max) / bait.AttractivenessStrenght;
+        float baitAttractiveness = 0;
+
+        foreach (BaseBait bait in baits)
+        {
+            baitAttractiveness += bait.AttractivenessStrenght;
+        }
+
+        float delay = Random.Range(_bitDelayRange.min, _bitDelayRange.max) / baitAttractiveness;
 
         int bitesCount = Random.Range(_bitesCount.min, _bitesCount.max + 1);
     }
 
-    
+    private IEnumerator DelayedBitingCo(BaseFish fish, float delay, int bitesCount)
+    {
+        yield return new WaitForSeconds(delay);
+
+        for (int i = 0; i < bitesCount; i++)
+        {
+            OnFishBitTheBait?.Invoke();
+            float bitesDelay = Random.Range(_bitesDelay.min, _bitesDelay.max);
+            yield return new WaitForSeconds(bitesDelay);
+        }
+
+        fish.OnBited();
+        OnFishBit?.Invoke();
+    }
 }

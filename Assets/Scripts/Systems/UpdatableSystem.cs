@@ -44,7 +44,7 @@ public class UpdatableSystem : MonoBehaviour, ISystem
         if (!IsInitialized)
             return;
 
-        foreach (IUpdatable updatable in _updatables)
+        foreach (IUpdatable updatable in _updatables.ToArray())
         {
             updatable.Update();
         }

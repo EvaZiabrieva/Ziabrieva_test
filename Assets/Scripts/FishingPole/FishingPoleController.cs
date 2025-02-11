@@ -1,6 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -32,6 +29,7 @@ public class FishingPoleController : BaseFishingPoleController
                 _castingDirection = _fishingPole.transform.forward + _fishingPole.transform.up;
                 _castingSpeed = _castingTracker.TrackedDistance * _fishingPole.CastingSensitivity;
                 _fishingPole.Bobber.Cast(_castingDirection, _castingSpeed);
+                _fishingPole.Hook.OnCast();
                 RemoveSubscriber();
             }
         }

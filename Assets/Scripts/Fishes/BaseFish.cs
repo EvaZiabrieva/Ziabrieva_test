@@ -16,4 +16,6 @@ public abstract class BaseFish
         _fishData = data;
         _view = view;
     }
+
+    public abstract void OnBited();
 }

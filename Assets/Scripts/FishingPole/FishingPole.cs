@@ -42,10 +42,12 @@ public class FishingPole : MonoBehaviour, IGrabable
     {
         _updatableSystem.RegisterUpdatable(_fishingPoleController);
         _hook.Initialize();
+        _bobber.Initialize();
     }
     public void OnDrop()
     {
         _updatableSystem.UnRegisterUpdatable(_fishingPoleController);
         _hook.Shutdown();
+        _bobber.Shutdown();
     }
 }

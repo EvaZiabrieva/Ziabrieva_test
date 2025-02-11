@@ -9,19 +9,18 @@ public class Hook : BaseHook
     private SoftJointLimit currentLimit;
     private Rigidbody _rigidbody;
     private GrabableSystem _grabableSystem;
+    private FishInteractionSystem _fishInteractionSystem;
 
-    public Hook(float baitCapacity, float failChance, BaseHookView hookView, ConfigurableJoint joint, Rigidbody rigidbody, AttachDetector attachDetector)
+    public Hook(BaseHookView view, AttachDetector attachDetector,
+                CollisionByLayerDetector waterDetector, HookData data, 
+                ConfigurableJoint joint, Rigidbody rigidbody) : base (view, attachDetector, waterDetector, data)
     {
-        //TODO: get values from configs
-        _baitCapacity = baitCapacity;
-        _failChance = failChance;
-        _view = hookView;
         _joint = joint;
         _rigidbody = rigidbody;
         _attachDetector = attachDetector;
-        _currentBaitCapacity = 0;
 
         _grabableSystem = SystemsContainer.GetSystem<GrabableSystem>();
+        _fishInteractionSystem = SystemsContainer.GetSystem<FishInteractionSystem>();
     }
     public override void Initialize()
     {
@@ -30,6 +29,8 @@ public class Hook : BaseHook
 
         _grabableSystem.OnAttachableGrab += CheckForAttach;
         _grabableSystem.OnAttachableDrop += SetDefault;
+
+        _waterCollisionDetector.OnWaterDetected += OnWaterCollisionDetectedHandler;
     }
 
     public override void Shutdown()
@@ -39,11 +40,13 @@ public class Hook : BaseHook
 
         _grabableSystem.OnAttachableGrab -= CheckForAttach;
         _grabableSystem.OnAttachableDrop -= SetDefault;
+
+        _waterCollisionDetector.OnWaterDetected -= OnWaterCollisionDetectedHandler;
     }
 
     public override void CheckForAttach()
     {
-        if (_currentBaitCapacity < _baitCapacity)
+        if (currentBaitCount < Data.BaitCapacity)
         {
             _attachDetector.enabled = true;
             _view.SetReadyToAttachVisual();
@@ -62,7 +65,24 @@ public class Hook : BaseHook
 
     private void OnAttachHandler(IHookAttachable attachable)
     {
-        _currentBaitCapacity++;
         _attachDetector.enabled = false;
+
+        //TODO: remove this cast
+        if(attachable is BaseBait bait)
+        {
+            _baits.Add(bait);
+        }
+    }
+
+    public override void OnCast()
+    {
+        _waterCollisionDetector.IsActive = true;
+    }
+
+    private void OnWaterCollisionDetectedHandler()
+    {
+        Debug.Log("Water detected");
+        _waterCollisionDetector.IsActive = false;
+        _fishInteractionSystem.SetupFishBehaviour(_baits);
     }
 }
