@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 5318755917358428996}
   - component: {fileID: 3743455976822764069}
   - component: {fileID: 5432413344679413055}
+  - component: {fileID: 51155549011012757}
   m_Layer: 4
   m_Name: Simple_Water
   m_TagString: Untagged
@@ -62,7 +63,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: a98528a2681bde641a53ec7c61757156, type: 2}
+  - {fileID: 2100000, guid: 5e20eab82bc57ca41a28ef6f61fb6f74, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -97,3 +98,19 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 2, y: 0.6, z: 2}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &51155549011012757
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6602509510432910784}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 70776a8d1fb5bde4aa095508791ddafa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  TextureSize: 512
+  ObjectsRT: {fileID: 8400000, guid: 43e2b9607b42991478d8484af3059a23, type: 2}
+  RippleShader: {fileID: 4800000, guid: 171fc69180fc6ae479dfe8aba39b2ca0, type: 3}
+  AddShader: {fileID: 4800000, guid: cd3c1dfcfb6ed2d4db0bb0b1664796a5, type: 3}
