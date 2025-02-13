@@ -5,7 +5,6 @@ public abstract class BaseHook
 {
     protected BaseHookView _view;
     protected AttachDetector _attachDetector;
-    protected CollisionByLayerDetector _waterCollisionDetector;
     protected HookData _hookData;
     protected List<BaseBait> _baits;
     protected int currentBaitCount => _baits.Count;
@@ -14,12 +13,10 @@ public abstract class BaseHook
     public HookData Data => _hookData;
     public List<BaseBait> Baits => _baits;
 
-    protected BaseHook(BaseHookView view, AttachDetector attachDetector,
-                       CollisionByLayerDetector waterDetector, HookData data)
+    protected BaseHook(BaseHookView view, AttachDetector attachDetector, HookData data)
     {
         _view = view;
         _attachDetector = attachDetector;
-        _waterCollisionDetector = waterDetector;
         _hookData = data;
         _baits = new List<BaseBait>(_hookData.BaitCapacity);
     }
@@ -28,7 +25,7 @@ public abstract class BaseHook
     public abstract void Shutdown();
     public abstract void CheckForAttach();
     public abstract void SetDefault();
-    public abstract void OnCast();
+    public abstract void OnWaterDetectedHandler();
 }
 
 [System.Serializable]

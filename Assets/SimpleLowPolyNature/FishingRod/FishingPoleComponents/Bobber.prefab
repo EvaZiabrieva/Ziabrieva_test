@@ -5005,6 +5005,7 @@ GameObject:
   - component: {fileID: 1693118169903356237}
   - component: {fileID: 7712201186624276126}
   - component: {fileID: 1461725688558127862}
+  - component: {fileID: -1046529047496647450}
   m_Layer: 6
   m_Name: Bobber
   m_TagString: Untagged
@@ -5154,3 +5155,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <BobberJointPoint>k__BackingField: {fileID: 2646574180130722286, guid: fe83897be2a452840b49b36767333850, type: 3}
+--- !u!114 &-1046529047496647450
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7803369660891802766}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0f5ec4849c2f3cc45b2a596162c65b12, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  layerMask:
+    serializedVersion: 2
+    m_Bits: 16

@@ -1,8 +1,15 @@
+using System;
 using UnityEngine;
 
 public abstract class BaseBobber
 {
+    public abstract event Action OnWaterDetected;
     protected BaseBobberView _view;
+
+    protected BaseBobber(BaseBobberView view)
+    {
+        _view = view;
+    }
 
     public abstract void Initialize();
     public abstract void Shutdown();

@@ -36,6 +36,8 @@ public class FishingPole : MonoBehaviour, IGrabable
         _hook.AttachDetector.enabled = false;
         _fishingReel.SetRange(0, 360 * (_fishingLine.View.MaxLength / _fishingReel.RoundLenght));
         _updatableSystem = SystemsContainer.GetSystem<UpdatableSystem>();
+
+        _bobber.OnWaterDetected += _hook.OnWaterDetectedHandler;
     }
 
     public void OnGrab()

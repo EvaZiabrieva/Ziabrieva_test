@@ -76,12 +76,11 @@ public class FishingPoleFactory
         configurableJoint.connectedBody = _bobberRigidbody;
         Rigidbody hoohRigidbody = _hookObject.GetComponent<Rigidbody>();
         AttachDetector attachDetector = _hookObject.GetComponent<AttachDetector>();
-        CollisionByLayerDetector waterDetector = _hookObject.GetComponent<CollisionByLayerDetector>();
 
         _hookView = new HookView(hookVisualsContainer);
         //TODO: move data values to configs
         HookData data = new HookData(1, 0.3f);
-        _hook = new Hook(_hookView, attachDetector, waterDetector, data, configurableJoint, hoohRigidbody);
+        _hook = new Hook(_hookView, attachDetector, data, configurableJoint, hoohRigidbody);
     }
     private void CreateBobber(GameObject bobber, Vector3 spawnPoint)
     {
@@ -92,9 +91,10 @@ public class FishingPoleFactory
         ConfigurableJoint configurableJoint = bobberObject.GetComponent<ConfigurableJoint>();
         configurableJoint.connectedBody = connectedRigidbody;
         _bobberRigidbody = bobberObject.GetComponent<Rigidbody>();
+        CollisionByLayerDetector waterDetector = bobberObject.GetComponent<CollisionByLayerDetector>(); 
 
-        _bobberView = new BobberView(bobberVisualsContainer);
-        _bobber = new Bobber(_bobberView, configurableJoint, _bobberRigidbody);
+        _bobberView = new BobberView(bobberVisualsContainer, _bobberRigidbody);
+        _bobber = new Bobber(_bobberView, waterDetector, configurableJoint);
     }
     private void CreateFishingLine(GameObject fishingLine, Vector3 spawnPoint)
     {

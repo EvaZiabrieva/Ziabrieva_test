@@ -1,15 +1,14 @@
-using System;
-using UnityEngine;
-
 /// <summary>
 /// Possibility to extned fish with unique data or logic
 /// </summary>
-[Serializable]
 public abstract class BaseFish
 {
-    [SerializeField] protected FishData _fishData;
-    [SerializeField] protected BaseFishView _view;
+    protected FishData _fishData;
+    protected BaseFishView _view;
+    protected BaseFishBehaviour _behaviour;
+    protected BaseFishBehaviourController _controller;
     public FishData Data => _fishData;
+    public BaseFishBehaviour Behaviour => _behaviour;
 
     protected BaseFish(FishData data, BaseFishView view)
     {
@@ -17,5 +16,5 @@ public abstract class BaseFish
         _view = view;
     }
 
-    public abstract void OnBited();
+    public abstract void OnBit();
 }

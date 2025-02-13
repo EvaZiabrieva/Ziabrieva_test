@@ -17,7 +17,7 @@ public class FishInteractionSystem : MonoBehaviour, ISystem
     public bool IsInitialized => _fishes != null;
 
     public event System.Action OnFishBitTheBait;
-    public event System.Action OnFishBit;
+    public event System.Action<BaseFish> OnFishBit;
 
     public void Initialize()
     {
@@ -30,7 +30,7 @@ public class FishInteractionSystem : MonoBehaviour, ISystem
         _fishes = null;
     }
 
-    public void SetupFishBehaviour(List<BaseBait> baits)
+    public void SetupFish(List<BaseBait> baits)
     {
         // TODO: create configs system, choose random fish
         Fish fish = _factory.CreateFish(_fishData, _fishView);
@@ -57,7 +57,7 @@ public class FishInteractionSystem : MonoBehaviour, ISystem
             yield return new WaitForSeconds(bitesDelay);
         }
 
-        fish.OnBited();
-        OnFishBit?.Invoke();
+        fish.OnBit();
+        OnFishBit?.Invoke(fish);
     }
 }

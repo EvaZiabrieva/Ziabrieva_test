@@ -12,8 +12,7 @@ public class Hook : BaseHook
     private FishInteractionSystem _fishInteractionSystem;
 
     public Hook(BaseHookView view, AttachDetector attachDetector,
-                CollisionByLayerDetector waterDetector, HookData data, 
-                ConfigurableJoint joint, Rigidbody rigidbody) : base (view, attachDetector, waterDetector, data)
+                HookData data, ConfigurableJoint joint, Rigidbody rigidbody) : base (view, attachDetector, data)
     {
         _joint = joint;
         _rigidbody = rigidbody;
@@ -29,8 +28,6 @@ public class Hook : BaseHook
 
         _grabableSystem.OnAttachableGrab += CheckForAttach;
         _grabableSystem.OnAttachableDrop += SetDefault;
-
-        _waterCollisionDetector.OnWaterDetected += OnWaterCollisionDetectedHandler;
     }
 
     public override void Shutdown()
@@ -40,8 +37,6 @@ public class Hook : BaseHook
 
         _grabableSystem.OnAttachableGrab -= CheckForAttach;
         _grabableSystem.OnAttachableDrop -= SetDefault;
-
-        _waterCollisionDetector.OnWaterDetected -= OnWaterCollisionDetectedHandler;
     }
 
     public override void CheckForAttach()
@@ -74,15 +69,8 @@ public class Hook : BaseHook
         }
     }
 
-    public override void OnCast()
+    public override void OnWaterDetectedHandler()
     {
-        _waterCollisionDetector.IsActive = true;
-    }
-
-    private void OnWaterCollisionDetectedHandler()
-    {
-        Debug.Log("Water detected");
-        _waterCollisionDetector.IsActive = false;
-        _fishInteractionSystem.SetupFishBehaviour(_baits);
+        _fishInteractionSystem.SetupFish(_baits);
     }
 }
