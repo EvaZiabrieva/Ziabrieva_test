@@ -1,4 +1,16 @@
 public class FishView : BaseFishView
 {
-    //For now used only as visual prefab container
+    public FishView(FishVisualsContainer container) : base(container) {}
+
+    public override void SetWaterVisualsState(bool activeState)
+    {
+        if (activeState)
+        {
+            _container.ParticleSystem.Play();
+        }
+        else 
+        {
+            _container.ParticleSystem.Stop();
+        }
+    }
 }

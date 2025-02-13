@@ -10,7 +10,9 @@ public abstract class BaseBobberView
         _bobberVisualsContainer = bobberVisualsContainer;
         Rigidbody = rigidbody;
     }
-    public abstract void OnBeforeBit();
-    public abstract void OnAfterBit();
+    public abstract void Initialize();
+    public abstract void Shutdown();
+    public abstract void OnFishBitTheBaitHandler(float strength);
+    public abstract void OnFishBitHandler(Fish fish);
     public abstract void OnWaterDetected();
 }

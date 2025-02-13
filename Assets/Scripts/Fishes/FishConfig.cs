@@ -12,7 +12,7 @@ public class FishConfig
 
 //TODO: move to separate file
 [Serializable]
-public class RangeInt
+public struct RangeInt
 {
     public int min;
     public int max;
@@ -20,7 +20,7 @@ public class RangeInt
 
 //TODO: move to separate file
 [Serializable]
-public class RangeFloat
+public struct RangeFloat
 {
     public float min;
     public float max;

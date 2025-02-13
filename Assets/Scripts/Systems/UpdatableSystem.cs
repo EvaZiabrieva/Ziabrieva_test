@@ -70,7 +70,7 @@ public class UpdatableSystem : MonoBehaviour, ISystem
 
         foreach (IUpdatable updatable in _updatables.ToArray())
         {
-            updatable.Update();
+            updatable.ExecuteUpdate();
         }
     }
 
@@ -81,7 +81,7 @@ public class UpdatableSystem : MonoBehaviour, ISystem
 
         foreach (IFixedUpdatable updatable in _fixedUpdatables.ToArray())
         {
-            updatable.FixedUpdate();
+            updatable.ExecuteFixedUpdate();
         }
     }
 }

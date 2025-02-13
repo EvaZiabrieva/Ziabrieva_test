@@ -6,6 +6,8 @@ public abstract class BaseBobber
     public abstract event Action OnWaterDetected;
     protected BaseBobberView _view;
 
+    public BaseBobberView View => _view;
+
     protected BaseBobber(BaseBobberView view)
     {
         _view = view;

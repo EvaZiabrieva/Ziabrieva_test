@@ -19,7 +19,7 @@ public class CastingTracker : IUpdatable
         _updatableSystem = SystemsContainer.GetSystem<UpdatableSystem>();
     }
 
-    public void Update()
+    public void ExecuteUpdate()
     {
         _timer += Time.deltaTime;
         if (_timer >= _fixedTimeStep)

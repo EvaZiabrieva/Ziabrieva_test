@@ -71,6 +71,6 @@ public class Hook : BaseHook
 
     public override void OnWaterDetectedHandler()
     {
-        _fishInteractionSystem.SetupFish(_baits);
+        _fishInteractionSystem.SetupFish(_baits, _rigidbody.position);
     }
 }

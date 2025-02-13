@@ -1,9 +1,9 @@
 public interface IUpdatable 
 {
-    void Update();
+    void ExecuteUpdate();
 }
 
 public interface IFixedUpdatable
 {
-    void FixedUpdate();
+    void ExecuteFixedUpdate();
 }

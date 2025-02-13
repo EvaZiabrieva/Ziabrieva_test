@@ -42,8 +42,9 @@ public class FishingPoleFactory
 
         CastingTracker tracker = CreateCastingTracker();
         _fishingPoleController = new FishingPoleController(_fishingPole, tracker);
+        FishingPoleBaitingController baitingController = new FishingPoleBaitingController(_fishingPole);
 
-        _fishingPole.Initialize(_hook, _bobber, _fishingLine, _fishingReel, _pole, _fishingPoleController);
+        _fishingPole.Initialize(_hook, _bobber, _fishingLine, _fishingReel, _pole, _fishingPoleController, baitingController);
     }
 
     public void RemoveFishingPole()

@@ -2,22 +2,25 @@ using UnityEngine;
 
 public class FishBehaviour : BaseFishBehaviour
 {
-    private FishPullingData _pullingData;
+    private Transform _fishTransform;
+
+    public FishBehaviour(FishBehaviourData data, Transform fishTransform) : base(data)
+    {
+        _fishTransform = fishTransform;
+    }
 
     public override void Bite()
     {
         
     }
 
-    public override void Pull(Vector3 direction, float strength)
+    public override void Pull(Vector3 direction)
     {
-        _pullingData = new FishPullingData(direction, strength);
+        _fishTransform.position += direction.normalized * _behaviourData.Strength * Time.deltaTime;
     }
 
     public override void Release()
     {
         
     }
-
-    public override FishPullingData GetPullingData() => _pullingData;
 }

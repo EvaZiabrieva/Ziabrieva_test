@@ -64,7 +64,7 @@ public class FishingLineView : BaseFishingLineView, IUpdatable
 
     private float GetCurrentDistance() => Vector3.Distance(_pointsData.StartPoint.position, _pointsData.EndPoint.position);
 
-    public void Update()
+    public void ExecuteUpdate()
     {
         BezierCurve();
     }

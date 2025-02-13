@@ -3,7 +3,7 @@ using UnityEngine;
 public abstract class BaseFishingPoleBaitingController :  IUpdatable
 {
     protected FishingPole _fishingPole;
-    protected BaseFish _baitedFish;
+    protected Fish _baitedFish;
 
     protected BaseFishingPoleBaitingController(FishingPole pole)
     {
@@ -11,5 +11,5 @@ public abstract class BaseFishingPoleBaitingController :  IUpdatable
     }
     public abstract void Initialize();
     public abstract void Shutdown();
-    public abstract void Update();
+    public abstract void ExecuteUpdate();
 }

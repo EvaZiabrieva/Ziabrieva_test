@@ -27,18 +27,14 @@ public class Bobber : BaseBobber
 
     public override void Initialize()
     {
-        _fishInteractionSystem.OnFishBit += OnFisBitHandler;
-        _fishInteractionSystem.OnFishBitTheBait += OnFishBitTheBaitHandler;
         OnWaterDetected += OnWaterDetectedHandler;
-        OnWaterDetected += _view.OnWaterDetected;
+        _view.Initialize();
     }
 
     public override void Shutdown()
     {
-        _fishInteractionSystem.OnFishBit -= OnFisBitHandler;
-        _fishInteractionSystem.OnFishBitTheBait -= OnFishBitTheBaitHandler;
         OnWaterDetected -= OnWaterDetectedHandler;
-        OnWaterDetected -= _view.OnWaterDetected;
+        _view.Shutdown();
     }
 
     public override void Cast(Vector3 direction, float force)
@@ -59,20 +55,11 @@ public class Bobber : BaseBobber
         currentLimit.limit = limit;
         _joint.linearLimit = currentLimit;
     }
-
-    private void OnFishBitTheBaitHandler()
-    {
-        Debug.Log("Fish bit the bait");
-    }
-
-    private void OnFisBitHandler(BaseFish fish)
-    {
-        Debug.Log("Fish bit");
-    }
-
+    
     private void OnWaterDetectedHandler()
     {
         Debug.Log("Water detected");
         _waterDetector.IsActive = false;
+        _view.OnWaterDetected();
     }
 }

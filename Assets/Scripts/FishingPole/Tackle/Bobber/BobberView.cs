@@ -9,12 +9,31 @@ public class BobberView : BaseBobberView, IFixedUpdatable
     private const float DISPLACEMENT_AMOUNT = 3f;
     private const float INWATER_DRAG = 5f;
     private const float WATER_ANGULAR_DRAG = 5;
+    private const float BITING_STRENGTH = 3;
 
     private float _waterHeight;
+    private UpdatableSystem _updatableSystem;
+    private FishInteractionSystem _fishInteractionSystem;
 
-    public BobberView(BobberVisualsContainer bobberVisualsContainer, Rigidbody rigidbody) : base(bobberVisualsContainer, rigidbody) {}
+    public BobberView(BobberVisualsContainer bobberVisualsContainer, Rigidbody rigidbody) : base(bobberVisualsContainer, rigidbody) 
+    {
+        _updatableSystem = SystemsContainer.GetSystem<UpdatableSystem>();
+        _fishInteractionSystem = SystemsContainer.GetSystem<FishInteractionSystem>();
+    }
 
-    public void FixedUpdate()
+    public override void Initialize()
+    {
+        _fishInteractionSystem.OnFishBit += OnFishBitHandler;
+        _fishInteractionSystem.OnFishBitTheBait += OnFishBitTheBaitHandler;
+    }
+
+    public override void Shutdown()
+    {
+        _fishInteractionSystem.OnFishBit -= OnFishBitHandler;
+        _fishInteractionSystem.OnFishBitTheBait -= OnFishBitTheBaitHandler;
+    }
+
+    public void ExecuteFixedUpdate()
     {
         if (Rigidbody.transform.position.y < _waterHeight)
         {
@@ -23,14 +42,15 @@ public class BobberView : BaseBobberView, IFixedUpdatable
         }
     }
 
-    public override void OnAfterBit()
+    public override void OnFishBitHandler(Fish fish)
     {
-        
+        Rigidbody.transform.parent = fish.transform;
+        _waterHeight -= 1;
     }
 
-    public override void OnBeforeBit()
+    public override void OnFishBitTheBaitHandler(float strength)
     {
-       
+        Rigidbody.AddForce(-Vector3.up * strength * BITING_STRENGTH, ForceMode.Impulse);
     }
 
     public override void OnWaterDetected()
@@ -39,6 +59,6 @@ public class BobberView : BaseBobberView, IFixedUpdatable
         Rigidbody.drag = INWATER_DRAG;
         Rigidbody.angularDrag = WATER_ANGULAR_DRAG;
 
-        SystemsContainer.GetSystem<UpdatableSystem>().RegisterFixedUpdatable(this);
+        _updatableSystem.RegisterFixedUpdatable(this);
     }
 }

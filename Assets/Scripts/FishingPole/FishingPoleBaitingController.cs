@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 //TODO: Add abstraction
@@ -21,9 +22,10 @@ public class FishingPoleBaitingController : BaseFishingPoleBaitingController
     }
 
     //TODO: implement fish released logic
-    private void OnFishBitHandler(BaseFish fish)
+    private void OnFishBitHandler(Fish fish)
     {
         _baitedFish = fish;
+        _fishingPole.FishingReel.ApplyTension(_baitedFish.Data.BehaviourData.Strength);
         _updatableSystem.RegisterUpdatable(this);
     }
 
@@ -32,9 +34,8 @@ public class FishingPoleBaitingController : BaseFishingPoleBaitingController
         _fishInteractionSystem.OnFishBit -= OnFishBitHandler;
     }
 
-    public override void Update()
+    public override void ExecuteUpdate()
     {
-        FishPullingData data = _baitedFish.Behaviour.GetPullingData();
-        //calculate fishing progress depend on user input direction and fish pulling data
+       
     }
 }
