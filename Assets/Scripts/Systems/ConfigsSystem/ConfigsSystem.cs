@@ -11,12 +11,15 @@ public class ConfigsSystem : MonoBehaviour, IConfigSystem
     public class InspectorConfigHolder
     {
         [SerializeReference] public List<BaseConfig> configs;
-        [HideInInspector] public Type type;
+        public Type type;
 
         public InspectorConfigHolder(Type type)
         {
+            this.type = type;
             configs = new List<BaseConfig>();
-            configs.Add((BaseConfig)Activator.CreateInstance(type));
+            BaseConfig config = (BaseConfig)Activator.CreateInstance(type);
+            config.id = type.ToString();
+            configs.Add(config);
         }
     }
 
@@ -38,9 +41,21 @@ public class ConfigsSystem : MonoBehaviour, IConfigSystem
             Configs.Add(new InspectorConfigHolder(type));
         }
     }
+
+    [ContextMenu(nameof(WriteAllConfigs))]
+    private void WriteAllConfigs()
+    {
+        foreach (InspectorConfigHolder holder in Configs)
+        {
+            foreach (BaseConfig config in holder.configs)
+            {
+                WriteConfig(_path + $"/{config.id}.json", config);
+            }
+        }
+    }
 #endif
 
-    [SerializeField] private string _directoryName;
+    private readonly string _directoryName = "Configs";
 
     /// <summary>
     /// Application.dataPath is in use to get possibility 
@@ -121,7 +136,7 @@ public class ConfigsSystem : MonoBehaviour, IConfigSystem
         return config;
     }
 
-    private void WriteConfig<T>(string path, T config) where T : BaseConfig, new()
+    private void WriteConfig<T>(string path, T config) where T : BaseConfig
     {
         string json = JsonUtility.ToJson(config);
 

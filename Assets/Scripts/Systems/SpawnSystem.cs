@@ -14,7 +14,6 @@ public class SpawnSystem : MonoBehaviour, ISystem
 
     [Header("Fish")]
     [SerializeField] private Fish _fishObject;
-    [SerializeField] private FishData _fishData;
 
     private FishingPoleFactory _fishingPoleFactory;
     private FishFactory _fishFactory;
@@ -35,7 +34,7 @@ public class SpawnSystem : MonoBehaviour, ISystem
     public Fish CreateFish(Vector3 spawnPosition)
     {
         // TODO: get fish data from configs
-        return _fishFactory.CreateFish(_fishObject, _fishData, spawnPosition);
+        return _fishFactory.CreateFish(_fishObject, spawnPosition);
     }
 
     public void Shutdown()
