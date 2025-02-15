@@ -1,12 +1,28 @@
+using UnityEngine;
+
 public abstract class BaseState 
 {
-    protected BehaviourStateMachine _stateMachine;
-    protected BaseState(BehaviourStateMachine stateMachine)
+    public abstract bool Finished { get; protected set; }
+
+    protected FishBehaviourStateMachine _stateMachine;
+   
+    public void Start(FishBehaviourStateMachine stateMachine)
     {
+        Debug.Log($"{this} started");
         _stateMachine = stateMachine;
     }
 
-    public abstract void Start();
     public abstract void Update();
-    public abstract void Stop();
+
+    public void Stop()
+    {
+        Finished = true;
+        _stateMachine = null;
+        StopInternal();
+
+        Debug.Log($"{this} stopped");
+    }
+
+    public virtual void StartInternal() { }
+    public virtual void StopInternal() { }
 }

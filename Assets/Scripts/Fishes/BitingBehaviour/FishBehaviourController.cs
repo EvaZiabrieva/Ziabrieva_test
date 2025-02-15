@@ -5,19 +5,28 @@ public class FishBehaviourController : BaseFishBehaviourController
     private UpdatableSystem _updatableSystem;
     private FishInteractionSystem _fishInteractionSystem;
     private FishBehaviourData _data;
+    private FishBehaviourStateMachine _stateMachine;
     private float _delay;
     private float _timer;
     private Vector3 _direciton;
     private Transform _target;
     private LayerMask _layerMask;
+
     public FishBehaviourController(Fish fish, Transform target) : base(fish) 
     {
         _target = target;
 
         _updatableSystem = SystemsContainer.GetSystem<UpdatableSystem>();
-        _fishInteractionSystem =SystemsContainer.GetSystem<FishInteractionSystem>();
+        _fishInteractionSystem = SystemsContainer.GetSystem<FishInteractionSystem>();
+        InitializeStateMachine();
 
         _updatableSystem.RegisterUpdatable(this);
+    }
+
+    private void InitializeStateMachine()
+    {
+        FollowTargetState followState = new FollowTargetState(_fish.transform, _target);
+        _stateMachine = new FishBehaviourStateMachine(_fish.Behaviour, followState);
     }
 
     public void MoveToTarget()
@@ -31,6 +40,7 @@ public class FishBehaviourController : BaseFishBehaviourController
             _fishInteractionSystem.StartBite();
         }
     }
+
     //TODO: get LayerMask from config
     public override void Initialize(LayerMask _obsticlesLayerMask)
     {
@@ -55,25 +65,7 @@ public class FishBehaviourController : BaseFishBehaviourController
 
     public override void ExecuteUpdate()
     {
-        if(Vector3.Distance(_fish.transform.position, _target.position) >= 0.1)
-        {
-            MoveToTarget();
-            return;
-        }
-        _timer += Time.deltaTime;
-        if(Physics.Raycast(_fish.transform.position, _direciton, 1, _layerMask))
-        {
-            _timer = _delay;
-        }
-
-        _fish.Behaviour.Pull(_direciton);
-
-        if (_timer < _delay)
-            return;
-
-        _direciton += GetRandomDirection(_data.XDirectionRange, _data.ZDirectionRange);
-        _delay = _data.ChangeDirectionDelayRange.random;
-        _timer = 0;
+       _stateMachine.Update();
     }
 
     private Vector3 GetRandomDirection(RangeFloat xRange, RangeFloat zRange) => new Vector3(xRange.random, 0, zRange.random);
