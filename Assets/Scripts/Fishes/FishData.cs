@@ -17,13 +17,25 @@ public class FishData
     [field: SerializeField] public Rarity Rarity { get; private set; }
     [field: SerializeField] public FishBehaviourData BehaviourData { get; private set; }
 
-    public FishData(string id, float weight, int points, int level, Rarity rarity)
+    public FishData(string id, float weight, int points, int level, 
+                    Rarity rarity, FishBehaviourData behavioutData)
     {
         Id = id;
         Weight = weight;
         Points = points;
         Level = level;
         Rarity = rarity;
+        BehaviourData = behavioutData;
+    }
+
+    public FishData(FishConfig config)
+    {
+        Id = config.id;
+        Weight = config.weight;
+        Points = config.points;
+        Level = config.level;
+        Rarity = config.rarity;
+        BehaviourData = config.behaviourData;
     }
 }
 
@@ -37,4 +49,17 @@ public class FishBehaviourData
     [field: SerializeField] public RangeFloat ChangeDirectionDelayRange { get; private set; }
     [field: SerializeField] public RangeFloat XDirectionRange { get; private set; }
     [field: SerializeField] public RangeFloat ZDirectionRange { get; private set; }
+
+    public FishBehaviourData(float strength, RangeFloat bitDelayRange, RangeInt bitesCountRange, 
+                             RangeFloat bitesDelayRange, RangeFloat changeDirectionDelayRange, 
+                             RangeFloat xDirectionRange, RangeFloat zDirectionRange)
+    {
+        Strength = strength;
+        BitDelayRange = bitDelayRange;
+        BitesCountRange = bitesCountRange;
+        BitesDelayRange = bitesDelayRange;
+        ChangeDirectionDelayRange = changeDirectionDelayRange;
+        XDirectionRange = xDirectionRange;
+        ZDirectionRange = zDirectionRange;
+    }
 }

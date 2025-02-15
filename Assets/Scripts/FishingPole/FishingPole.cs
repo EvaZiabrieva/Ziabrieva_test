@@ -22,7 +22,7 @@ public class FishingPole : MonoBehaviour, IGrabable
     public BaseHook Hook => _hook;
     public BaseBobber Bobber => _bobber;
     public BaseFishingLine FishingLine => _fishingLine;
-    public BaseFishingReel FishingReel =>  _fishingReel;
+    public BaseFishingReel FishingReel => _fishingReel;
     public BasePole Pole => _pole;
     public Transform PoleTip => _poleTip;
 
@@ -40,7 +40,7 @@ public class FishingPole : MonoBehaviour, IGrabable
         _baitingController = baitingController;
 
         _hook.AttachDetector.enabled = false;
-        _fishingReel.SetRange(0, 360 * (_fishingLine.View.MaxLength / _fishingReel.RoundLenght));
+        _fishingReel.SetRange(0, 360 * (_fishingLine.View.MaxLength / _fishingReel.Data.RoundLength));
         _updatableSystem = SystemsContainer.GetSystem<UpdatableSystem>();
         SystemsContainer.GetSystem<FishingProgressSystem>().RegisterFishingPole(this);
     }

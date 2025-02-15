@@ -57,8 +57,9 @@ public class FishingPoleFactory
     {
         _poleObject = GameObject.Instantiate(pole, spawnPoint, Quaternion.identity);
         _poleVisualsContainer = _poleObject.GetComponent<PoleVisualsContainer>();
+        PoleData data = new PoleData(10);
         _poleView = new PoleView(_poleVisualsContainer);
-        _pole = new Pole(10f, _poleView);
+        _pole = new Pole(data, _poleView);
     }
     private void CreateReel(GameObject fishingReel, Vector3 spawnPoint)
     {
@@ -66,7 +67,8 @@ public class FishingPoleFactory
         FishingReelVisualsContainer reelVisualsContainer = reelObject.GetComponent<FishingReelVisualsContainer>();
         XRKnob knob = reelObject.GetComponentInChildren<XRKnob>();
         _fishingReelView = new FishingReelView(reelVisualsContainer);
-        _fishingReel = new FishingReel(_fishingReelView, knob, 1);
+        FishingReelData data = new FishingReelData(1);
+        _fishingReel = new FishingReel(_fishingReelView, data, knob);
     }
     private void CreateHook(GameObject hook, Vector3 spawnPoint)
     {

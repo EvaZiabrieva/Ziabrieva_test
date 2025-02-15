@@ -39,6 +39,12 @@ public class HookData
         BaitCapacity = capacity;
         FailChance = failChance;
     }
+
+    public HookData(HookConfig config)
+    {
+        BaitCapacity = config.baitCapacity;
+        FailChance = config.failChance;
+    }
 }
 
 
