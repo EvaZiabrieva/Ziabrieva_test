@@ -9,14 +9,4 @@ public class FishConfig : BaseConfig
     public int level;
     public Rarity rarity;
     public FishBehaviourData behaviourData;
-
-    public FishConfig(string id, float weight, int points, int level, 
-                      Rarity rarity, FishBehaviourData behaviourData) : base (id)
-    {
-        this.weight = weight;
-        this.points = points;
-        this.level = level;
-        this.rarity = rarity;
-        this.behaviourData = behaviourData;
-    }
 }
