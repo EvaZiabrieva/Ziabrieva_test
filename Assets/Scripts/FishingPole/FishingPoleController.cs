@@ -26,7 +26,7 @@ public class FishingPoleController : BaseFishingPoleController
             currLenght += Time.deltaTime / 5;
             _fishingPole.FishingReel.SetAngle(currLenght);
         }
-        if (Input.GetKey(KeyCode.LeftControl))
+        if (Input.GetKey(KeyCode.RightControl))
         {
             currLenght -= Time.deltaTime / 5;
             _fishingPole.FishingReel.SetAngle(currLenght);

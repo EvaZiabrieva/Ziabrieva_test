@@ -1,21 +1,42 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using UnityEngine;
+using static UnityEngine.GraphicsBuffer;
 
 public class FishBehaviourController : BaseFishBehaviourController
 {
     private UpdatableSystem _updatableSystem;
+    private FishInteractionSystem _fishInteractionSystem;
     private FishBehaviourData _data;
     private float _delay;
     private float _timer;
     private Vector3 _direciton;
-
-    public FishBehaviourController(Fish fish) : base(fish) 
+    private Transform _target;
+    private LayerMask _layerMask;
+    public FishBehaviourController(Fish fish, Transform target) : base(fish) 
     {
+        _target = target;
+
         _updatableSystem = SystemsContainer.GetSystem<UpdatableSystem>();
+        _fishInteractionSystem =SystemsContainer.GetSystem<FishInteractionSystem>();
+
+        _updatableSystem.RegisterUpdatable(this);
     }
 
-    public override void Initialize()
+    public void MoveToTarget()
+    {
+        Vector3 direction = (_target.position - _fish.transform.position).normalized;
+        _fish.transform.position += direction * Time.deltaTime;
+
+        if(Vector3.Distance(_fish.transform.position, _target.position) <= 0.1)
+        {
+            _updatableSystem.UnRegisterUpdatable(this);
+            _fishInteractionSystem.StartBite();
+        }
+    }
+    //TODO: get LayerMask from config
+    public override void Initialize(LayerMask _obsticlesLayerMask)
     {
         _data = _fish.Data.BehaviourData;
 
@@ -28,6 +49,7 @@ public class FishBehaviourController : BaseFishBehaviourController
 
         _timer = 0;
         _updatableSystem.RegisterUpdatable(this);
+        _layerMask = _obsticlesLayerMask;
     }
 
     public override void Shutdown()
@@ -37,7 +59,16 @@ public class FishBehaviourController : BaseFishBehaviourController
 
     public override void ExecuteUpdate()
     {
+        if(Vector3.Distance(_fish.transform.position, _target.position) >= 0.1)
+        {
+            MoveToTarget();
+            return;
+        }
         _timer += Time.deltaTime;
+        if(Physics.Raycast(_fish.transform.position, _direciton, 1, _layerMask))
+        {
+            _timer = _delay;
+        }
 
         _fish.Behaviour.Pull(_direciton);
 

@@ -31,10 +31,9 @@ public class SpawnSystem : MonoBehaviour, ISystem
         _fishingPoleFactory.CreateFishingPole(_pole, _fishingReel, _fishingLine, _hook, _bobber, _poleSpawnPoint);
     }
 
-    public Fish CreateFish(Vector3 spawnPosition)
+    public Fish CreateFish(Transform parent)
     {
-        // TODO: get fish data from configs
-        return _fishFactory.CreateFish(_fishObject, spawnPosition);
+        return _fishFactory.CreateFish(_fishObject, parent);
     }
 
     public void Shutdown()

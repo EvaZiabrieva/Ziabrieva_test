@@ -12,6 +12,8 @@ public class FishInteractionSystem : MonoBehaviour, ISystem
     public event System.Action<Fish> OnFishBit;
 
     private SpawnSystem _spawnSystem;
+    private List<BaseBait> _baits = new List<BaseBait>();
+    private Fish _currentFish;
 
     public void Initialize()
     {
@@ -24,21 +26,25 @@ public class FishInteractionSystem : MonoBehaviour, ISystem
         _fishes = null;
     }
 
-    public void SetupFish(List<BaseBait> baits, Vector3 position)
+    public void SetupFish(List<BaseBait> baits, Transform parent)
     {
         // TODO: create configs system, choose random fish
-        Fish fish = _spawnSystem.CreateFish(position);
-        FishBehaviourData data = fish.Data.BehaviourData;
-
         if (baits == null || baits.Count == 0)
         {
-            OnFishBit?.Invoke(fish);
             return;
         }
 
+        _currentFish = _spawnSystem.CreateFish(parent);
+
+        _baits.AddRange(baits);
+    }
+    public void StartBite()
+    {
+        FishBehaviourData data = _currentFish.Data.BehaviourData;
+
         float baitAttractiveness = 0;
 
-        foreach (BaseBait bait in baits)
+        foreach (BaseBait bait in _baits)
         {
             baitAttractiveness += bait.AttractivenessStrenght;
         }
@@ -46,7 +52,7 @@ public class FishInteractionSystem : MonoBehaviour, ISystem
         float delay = Random.Range(data.BitDelayRange.min, data.BitDelayRange.max) / baitAttractiveness;
         int bitesCount = Random.Range(data.BitesCountRange.min, data.BitesCountRange.max + 1);
 
-        StartCoroutine(DelayedBitingCo(fish, delay, bitesCount, data.BitesDelayRange));
+        StartCoroutine(DelayedBitingCo(_currentFish, delay, bitesCount, data.BitesDelayRange));
     }
 
     private IEnumerator DelayedBitingCo(Fish fish, float delay, int bitesCount, RangeFloat bitesDelayRange)

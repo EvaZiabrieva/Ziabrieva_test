@@ -20,8 +20,8 @@ public class FishingProgressSystem : MonoBehaviour, ISystem, IUpdatable
     private FishInteractionSystem _interactionSystem;
     private UpdatableSystem _updatableSystem;
 
-    private Vector2 _fishingPoleDirection;
-    private Vector2 _fishDirection;
+    private Vector3 _fishingPoleDirection;
+    private Vector3 _fishDirection;
 
     private float _currentPoints;
 
@@ -57,7 +57,6 @@ public class FishingProgressSystem : MonoBehaviour, ISystem, IUpdatable
         _progressUI.gameObject.SetActive(true);
         _updatableSystem.RegisterUpdatable(this);
         _currentPoints = _finishPointsRange.max / 2;
-        _progressBar.fillAmount = Mathf.Lerp(0, _finishPointsRange.max, _currentPoints);
     }
 
     public void Shutdown()
@@ -68,14 +67,15 @@ public class FishingProgressSystem : MonoBehaviour, ISystem, IUpdatable
     public void ExecuteUpdate()
     {
         _fishingPoleDirection = GetDirection(_fishingPole.PoleTip.position, _bobber.position);
-        _fishDirection = GetDirection(_fish.transform.position, _bobber.position);
+        _fishDirection = GetDirection(_bobber.position, _fish.transform.position);
 
-        float angle = Vector2.Angle(_fishingPoleDirection, _fishDirection);
-        float absAngleOffset = Mathf.Abs(DESIRED_ANGLE - angle);
+        float angle = Vector3.Angle(_fishingPoleDirection, _fishDirection);
+        Debug.Log(">>>" + angle);
+        float absAngleOffset = Mathf.Abs(angle);
 
         float earnedPoints = Mathf.InverseLerp(_availableCatchingAngleOffset * 2, 0, absAngleOffset);
         _currentPoints += (earnedPoints + CASHED_POINTS_COUNT) * Time.deltaTime;
-        _progressBar.fillAmount = Mathf.Lerp(_finishPointsRange.min, _finishPointsRange.max, _currentPoints);
+        _progressBar.fillAmount = _currentPoints/ _finishPointsRange.max;
 
         if(_currentPoints >= _finishPointsRange.max)
         {
@@ -87,12 +87,18 @@ public class FishingProgressSystem : MonoBehaviour, ISystem, IUpdatable
             OnFishingFinished?.Invoke(false);
         }
     }
-
-    private Vector2 GetDirection(Vector3 from, Vector3 to)
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawRay(_fishingPole.PoleTip.position, _fishingPoleDirection);
+        Gizmos.color = Color.white;
+        Gizmos.DrawRay(_fish.transform.position, _fishDirection);
+    }
+    private Vector3 GetDirection(Vector3 from, Vector3 to)
     {
         Vector3 direction = (to - from).normalized;
-        return new Vector2(direction.x, direction.z);
-    }
+        return direction;
+    } 
 
     private void CalculateResults()
     {

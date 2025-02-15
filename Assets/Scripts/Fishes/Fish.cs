@@ -1,7 +1,8 @@
 using UnityEngine;
 
-public class Fish : MonoBehaviour
+public class Fish : MonoBehaviour, IHookAttachable
 {
+    [SerializeField] private LayerMask _obsticlesLayerMask;
     private FishData _fishData;
     private BaseFishView _view;
     private BaseFishBehaviour _behaviour;
@@ -11,19 +12,28 @@ public class Fish : MonoBehaviour
     public BaseFishBehaviour Behaviour => _behaviour;
     public FishVisualsContainer VisualsContainer => _container;
 
+    public GameObject Visuals => gameObject;
+
+    public bool ReadyToAttach => true;
+
     public virtual void Initialize(FishData data, BaseFishView view, 
                        BaseFishBehaviour behaviour, BaseFishBehaviourController controller)
     {
         _fishData = data;
         _view = view;
         _behaviour = behaviour;
-        _controller = controller;
+        _controller = controller;  
+    }
+
+    public void OnAttach()
+    {
+        _view.SetWaterVisualsState(true);
     }
 
     public void OnBit()
     {
         _view.SetWaterVisualsState(true);
-        _controller.Initialize();
+        _controller.Initialize(_obsticlesLayerMask);
     }
 
     public void OnRelease()
@@ -31,4 +41,5 @@ public class Fish : MonoBehaviour
         _view.SetWaterVisualsState(false);
         _controller.Shutdown();
     }
+
 }

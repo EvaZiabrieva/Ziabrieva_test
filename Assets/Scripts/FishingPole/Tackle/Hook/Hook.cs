@@ -67,10 +67,14 @@ public class Hook : BaseHook
         {
             _baits.Add(bait);
         }
+        if(attachable is Fish fish)
+        {
+            _baits.Clear();
+        }
     }
 
     public override void OnWaterDetectedHandler()
     {
-        _fishInteractionSystem.SetupFish(_baits, _rigidbody.position);
+        _fishInteractionSystem.SetupFish(_baits, _rigidbody.gameObject.transform);
     }
 }

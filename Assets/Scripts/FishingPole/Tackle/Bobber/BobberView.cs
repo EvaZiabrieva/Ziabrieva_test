@@ -42,11 +42,8 @@ public class BobberView : BaseBobberView, IFixedUpdatable
         }
     }
 
-    public override void OnFishBitHandler(Fish fish)
-    {
-        Rigidbody.transform.parent = fish.transform;
+    public override void OnFishBitHandler(Fish fish) =>
         _waterHeight -= 1;
-    }
 
     public override void OnFishBitTheBaitHandler(float strength)
     {
