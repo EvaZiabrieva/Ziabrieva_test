@@ -62,7 +62,7 @@ public class FishInteractionSystem : MonoBehaviour, ISystem
         for (int i = 0; i < bitesCount; i++)
         {
             OnFishBitTheBait?.Invoke(fish.Data.BehaviourData.Strength);
-            float bitesDelay = Random.Range(bitesDelayRange.min, bitesDelayRange.max);
+            float bitesDelay = bitesDelayRange.random;
             yield return new WaitForSeconds(bitesDelay);
         }
 

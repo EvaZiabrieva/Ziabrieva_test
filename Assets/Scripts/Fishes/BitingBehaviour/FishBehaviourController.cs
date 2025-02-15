@@ -1,8 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Threading;
 using UnityEngine;
-using static UnityEngine.GraphicsBuffer;
 
 public class FishBehaviourController : BaseFishBehaviourController
 {
@@ -41,7 +37,7 @@ public class FishBehaviourController : BaseFishBehaviourController
         _data = _fish.Data.BehaviourData;
 
         RangeFloat delayRange = _data.ChangeDirectionDelayRange;
-        _delay = GetRandomDelay(delayRange);
+        _delay = delayRange.random;
 
         RangeFloat xRange = _data.XDirectionRange;
         RangeFloat zRange = _data.ZDirectionRange;
@@ -76,16 +72,9 @@ public class FishBehaviourController : BaseFishBehaviourController
             return;
 
         _direciton += GetRandomDirection(_data.XDirectionRange, _data.ZDirectionRange);
-        _delay = GetRandomDelay(_data.ChangeDirectionDelayRange);
+        _delay = _data.ChangeDirectionDelayRange.random;
         _timer = 0;
     }
 
-    private float GetRandomDelay(RangeFloat delayRange) => Random.Range(delayRange.min, delayRange.max);
-
-    private Vector3 GetRandomDirection(RangeFloat xRange, RangeFloat zRange)
-    {
-        float x = Random.Range(xRange.min, xRange.max);
-        float z = Random.Range(zRange.min, zRange.max);
-        return new Vector3(x, 0, z);
-    }
+    private Vector3 GetRandomDirection(RangeFloat xRange, RangeFloat zRange) => new Vector3(xRange.random, 0, zRange.random);
 }

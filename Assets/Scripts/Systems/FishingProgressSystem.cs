@@ -89,6 +89,9 @@ public class FishingProgressSystem : MonoBehaviour, ISystem, IUpdatable
     }
     private void OnDrawGizmos()
     {
+        if(!Application.isPlaying) 
+            return;
+
         Gizmos.color = Color.red;
         Gizmos.DrawRay(_fishingPole.PoleTip.position, _fishingPoleDirection);
         Gizmos.color = Color.white;
