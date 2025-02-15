@@ -4,9 +4,5 @@ using UnityEngine;
 
 public class Pole : BasePole
 {
-    public Pole(float stregth, BasePoleView poleView)
-    {
-        _stregth = stregth;
-        _view = poleView;
-    }
+    public Pole(PoleData data, BasePoleView view) : base(data, view) {}
 }

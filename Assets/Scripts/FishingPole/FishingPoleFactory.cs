@@ -1,9 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
 using Unity.VRTemplate;
 using UnityEngine;
-using UnityEngine.Pool;
-using UnityEngine.XR.OpenXR.Input;
 
 public class FishingPoleFactory
 {
@@ -29,9 +25,14 @@ public class FishingPoleFactory
     private GameObject _hookObject;
     private Rigidbody _bobberRigidbody;
     private PoleVisualsContainer _poleVisualsContainer;
+
+    private ConfigsSystem _configSystem;
+
     public void CreateFishingPole(GameObject pole, GameObject fishingReel, GameObject fishingLine,
                                   GameObject hook, GameObject bobber, Transform spawnPoint)
     {
+        _configSystem = SystemsContainer.GetSystem<ConfigsSystem>();
+
         CreatePole(pole, spawnPoint.position);
         CreateReel(fishingReel, _poleVisualsContainer.ReelPlacement.position);
         CreateBobber(bobber, _poleVisualsContainer.BobberPlacement.position);
@@ -57,8 +58,9 @@ public class FishingPoleFactory
     {
         _poleObject = GameObject.Instantiate(pole, spawnPoint, Quaternion.identity);
         _poleVisualsContainer = _poleObject.GetComponent<PoleVisualsContainer>();
+        PoleData data = new PoleData(_configSystem.GetConfig<PoleConfig>("PoleConfig"));
         _poleView = new PoleView(_poleVisualsContainer);
-        _pole = new Pole(10f, _poleView);
+        _pole = new Pole(data, _poleView);
     }
     private void CreateReel(GameObject fishingReel, Vector3 spawnPoint)
     {
@@ -66,7 +68,8 @@ public class FishingPoleFactory
         FishingReelVisualsContainer reelVisualsContainer = reelObject.GetComponent<FishingReelVisualsContainer>();
         XRKnob knob = reelObject.GetComponentInChildren<XRKnob>();
         _fishingReelView = new FishingReelView(reelVisualsContainer);
-        _fishingReel = new FishingReel(_fishingReelView, knob, 1);
+        FishingReelData data = new FishingReelData(_configSystem.GetConfig<FishingReelConfig>("FishingReelConfig"));
+        _fishingReel = new FishingReel(_fishingReelView, data, knob);
     }
     private void CreateHook(GameObject hook, Vector3 spawnPoint)
     {
@@ -80,7 +83,7 @@ public class FishingPoleFactory
 
         _hookView = new HookView(hookVisualsContainer);
         //TODO: move data values to configs
-        HookData data = new HookData(1, 0.3f);
+        HookData data = new HookData(_configSystem.GetConfig<HookConfig>("HookConfig"));
         _hook = new Hook(_hookView, attachDetector, data, configurableJoint, hoohRigidbody);
     }
     private void CreateBobber(GameObject bobber, Vector3 spawnPoint)
