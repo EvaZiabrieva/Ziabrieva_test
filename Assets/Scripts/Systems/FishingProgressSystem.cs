@@ -20,8 +20,8 @@ public class FishingProgressSystem : MonoBehaviour, ISystem, IUpdatable
     private FishInteractionSystem _interactionSystem;
     private UpdatableSystem _updatableSystem;
 
-    private Vector3 _fishingPoleDirection;
-    private Vector3 _fishDirection;
+    private Vector2 _fishingPoleDirection;
+    private Vector2 _fishDirection;
 
     private float _currentPoints;
 
@@ -66,11 +66,10 @@ public class FishingProgressSystem : MonoBehaviour, ISystem, IUpdatable
 
     public void ExecuteUpdate()
     {
-        _fishingPoleDirection = GetDirection(_fishingPole.PoleTip.position, _bobber.position);
-        _fishDirection = GetDirection(_bobber.position, _fish.transform.position);
+        _fishingPoleDirection = _fishingPole.PoleTip.forward;
+        _fishDirection = GetDirection(_fishingPole.PoleTip.position, _fish.transform.position);
 
         float angle = Vector3.Angle(_fishingPoleDirection, _fishDirection);
-        Debug.Log(">>>" + angle);
         float absAngleOffset = Mathf.Abs(angle);
 
         float earnedPoints = Mathf.InverseLerp(_availableCatchingAngleOffset * 2, 0, absAngleOffset);
@@ -87,16 +86,6 @@ public class FishingProgressSystem : MonoBehaviour, ISystem, IUpdatable
             OnFishingFinished?.Invoke(false);
         }
     }
-    //private void OnDrawGizmos()
-    //{
-    //    if(!Application.isPlaying) 
-    //        return;
-
-    //    Gizmos.color = Color.red;
-    //    Gizmos.DrawRay(_fishingPole.PoleTip.position, _fishingPoleDirection);
-    //    Gizmos.color = Color.white;
-    //    Gizmos.DrawRay(_fish.transform.position, _fishDirection);
-    //}
     private Vector3 GetDirection(Vector3 from, Vector3 to)
     {
         Vector3 direction = (to - from).normalized;

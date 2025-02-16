@@ -15,4 +15,9 @@ public class WormBait : BaseBait
         _rigidbody.isKinematic = true;
         Destroy(_collider);
     }
+
+    public override void OnReattach()
+    {
+        Destroy(gameObject);
+    }
 }

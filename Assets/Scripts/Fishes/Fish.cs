@@ -33,13 +33,13 @@ public class Fish : MonoBehaviour, IHookAttachable
     public void OnBit()
     {
         _view.SetWaterVisualsState(true);
-        _controller.Initialize();
+        //_controller.Initialize();
     }
 
     public void OnRelease()
     {
         _view.SetWaterVisualsState(false);
-        _controller.Shutdown();
+        //_controller.Shutdown();
     }
 
 }

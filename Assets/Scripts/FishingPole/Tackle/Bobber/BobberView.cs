@@ -42,8 +42,11 @@ public class BobberView : BaseBobberView, IFixedUpdatable
         }
     }
 
-    public override void OnFishBitHandler(Fish fish) =>
+    public override void OnFishBitHandler(Fish fish)
+    {
         _waterHeight -= 1;
+        Rigidbody.transform.parent = fish.transform;
+    }
 
     public override void OnFishBitTheBaitHandler(float strength)
     {
@@ -52,7 +55,14 @@ public class BobberView : BaseBobberView, IFixedUpdatable
 
     public override void OnWaterDetected()
     {
-        _waterHeight = Rigidbody.transform.position.y - 0.5f;
+        _bobberVisualsContainer.ParticleSystem.gameObject.SetActive(true);
+        _bobberVisualsContainer.ParticleSystem.Play();
+
+        Vector3 rotation = new Vector3(Rigidbody.transform.rotation.x, Rigidbody.transform.rotation.y, 0);
+         Rigidbody.transform.rotation = Quaternion.Euler(rotation);
+        Rigidbody.freezeRotation = true;
+
+        _waterHeight = Rigidbody.transform.position.y;
         Rigidbody.drag = INWATER_DRAG;
         Rigidbody.angularDrag = WATER_ANGULAR_DRAG;
 

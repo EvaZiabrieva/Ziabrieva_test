@@ -58,7 +58,6 @@ public class Bobber : BaseBobber
     
     private void OnWaterDetectedHandler()
     {
-        Debug.Log("Water detected");
         _waterDetector.IsActive = false;
         _view.OnWaterDetected();
     }

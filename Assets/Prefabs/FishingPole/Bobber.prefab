@@ -17,7 +17,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &6219117078233225518
 Transform:
   m_ObjectHideFlags: 0
@@ -26,8 +26,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 304131655775534308}
   m_LocalRotation: {x: -0.7071068, y: -0, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 0.28, y: -0.67, z: 0.2}
+  m_LocalScale: {x: 0.4, y: 0.4, z: 0.4}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 205858063773403181}
@@ -107,7 +107,7 @@ ParticleSystem:
       m_PostInfinity: 2
       m_RotationOrder: 4
   moveWithTransform: 0
-  moveWithCustomTransform: {fileID: 0}
+  moveWithCustomTransform: {fileID: 205858063773403181}
   scalingMode: 1
   randomSeed: 0
   InitialModule:
@@ -223,7 +223,7 @@ ParticleSystem:
       serializedVersion: 2
       minMaxState: 0
       minColor: {r: 1, g: 1, b: 1, a: 1}
-      maxColor: {r: 0.7169812, g: 0.7169812, b: 0.7169812, a: 0.78431374}
+      maxColor: {r: 1, g: 1, b: 1, a: 1}
       maxGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
@@ -669,7 +669,7 @@ ParticleSystem:
     donutRadius: 0.2
     m_Position: {x: 0, y: 0, z: 0}
     m_Rotation: {x: 0, y: 0, z: 0}
-    m_Scale: {x: 1, y: 1, z: 1}
+    m_Scale: {x: 0.1, y: 0.1, z: 0.1}
     placementMode: 0
     m_MeshMaterialIndex: 0
     m_MeshNormalOffset: 0
@@ -729,13 +729,13 @@ ParticleSystem:
           m_PreInfinity: 2
           m_PostInfinity: 2
           m_RotationOrder: 4
-    m_Mesh: {fileID: 0}
+    m_Mesh: {fileID: -2510629504852560692, guid: 74cdc2b906e91eb47bbd565ba815359d, type: 3}
     m_MeshRenderer: {fileID: 0}
     m_SkinnedMeshRenderer: {fileID: 0}
     m_Sprite: {fileID: 0}
     m_SpriteRenderer: {fileID: 0}
     m_UseMeshMaterialIndex: 0
-    m_UseMeshColors: 1
+    m_UseMeshColors: 0
     alignToDirection: 0
     m_Texture: {fileID: 0}
     m_TextureClipChannel: 3
@@ -4908,8 +4908,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.40174913, y: 0.79280853, z: 0.286731}
-  m_Center: {x: -7.719084, y: -38.14312, z: -0.4200375}
+  m_Size: {x: 0.3154068, y: 0.62976456, z: 0.21604961}
+  m_Center: {x: -7.675913, y: -38.059494, z: -0.4149786}
 --- !u!1 &7259205040361976527
 GameObject:
   m_ObjectHideFlags: 0
@@ -5140,7 +5140,7 @@ ConfigurableJoint:
   m_BreakTorque: Infinity
   m_EnableCollision: 0
   m_EnablePreprocessing: 1
-  m_MassScale: 1
+  m_MassScale: 0.1
   m_ConnectedMassScale: 1
 --- !u!114 &1461725688558127862
 MonoBehaviour:
@@ -5155,6 +5155,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <BobberJointPoint>k__BackingField: {fileID: 2646574180130722286, guid: fe83897be2a452840b49b36767333850, type: 3}
+  <ParticleSystem>k__BackingField: {fileID: 1091752841179342576}
 --- !u!114 &-1046529047496647450
 MonoBehaviour:
   m_ObjectHideFlags: 0

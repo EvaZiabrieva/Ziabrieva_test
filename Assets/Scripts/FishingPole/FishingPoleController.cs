@@ -21,13 +21,18 @@ public class FishingPoleController : BaseFishingPoleController
     {
         _fishingPole.FishingLine.View.SetLenght(GetCurrentLenght());
         _fishingPole.Bobber.UpdateOffset(GetCurrentLenght());
+
+        //Can be removed because used for debug
+        float lenght = GetCurrentLenght();
         if (Input.GetKey(KeyCode.Space))
         {
+            currLenght = lenght / _fishingPole.FishingLine.View.MaxLength;
             currLenght += Time.deltaTime / 5;
             _fishingPole.FishingReel.SetAngle(currLenght);
         }
         if (Input.GetKey(KeyCode.RightControl))
         {
+            currLenght = lenght / _fishingPole.FishingLine.View.MaxLength;
             currLenght -= Time.deltaTime / 5;
             _fishingPole.FishingReel.SetAngle(currLenght);
         }

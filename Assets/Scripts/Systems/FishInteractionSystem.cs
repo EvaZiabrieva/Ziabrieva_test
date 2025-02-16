@@ -28,18 +28,31 @@ public class FishInteractionSystem : MonoBehaviour, ISystem
 
     public void SetupFish(List<BaseBait> baits, Transform parent)
     {
+        float baitAttractiveness = 0;
         // TODO: create configs system, choose random fish
         if (baits == null || baits.Count == 0)
         {
             return;
         }
 
+        foreach (BaseBait bait in baits)
+        {
+            baitAttractiveness += bait.AttractivenessStrenght;
+        }
+
         _currentFish = _spawnSystem.CreateFish(parent);
-        _currentFish.Controller.Initialize();
+        float delay = Random.Range(_currentFish.Data.BehaviourData.BitDelayRange.min, _currentFish.Data.BehaviourData.BitDelayRange.max) / baitAttractiveness;
+
+        StartCoroutine(WaitUntillFollowCo(delay));
 
         _baits.AddRange(baits);
     }
 
+    private IEnumerator WaitUntillFollowCo(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        _currentFish.Controller.Initialize();
+    }
     public void InvokeOnFishBiteTheBait(float strength)
     {
         OnFishBitTheBait?.Invoke(strength);

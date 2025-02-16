@@ -28,6 +28,8 @@ public class Hook : BaseHook
 
         _grabableSystem.OnAttachableGrab += CheckForAttach;
         _grabableSystem.OnAttachableDrop += SetDefault;
+
+        _fishInteractionSystem.OnFishBit += OnBaitEaten;
     }
 
     public override void Shutdown()
@@ -37,6 +39,8 @@ public class Hook : BaseHook
 
         _grabableSystem.OnAttachableGrab -= CheckForAttach;
         _grabableSystem.OnAttachableDrop -= SetDefault;
+
+        _fishInteractionSystem.OnFishBit -= OnBaitEaten;
     }
 
     public override void CheckForAttach()
@@ -58,6 +62,13 @@ public class Hook : BaseHook
         _view.SetDefaultVisual();
     }
 
+    private void OnBaitEaten(Fish fish)
+    {
+        //TODO: add fail chance 
+        _baits[0].OnReattach();
+        _baits.RemoveAt(0);
+    }
+
     private void OnAttachHandler(IHookAttachable attachable)
     {
         _attachDetector.enabled = false;
@@ -69,7 +80,8 @@ public class Hook : BaseHook
         }
         if(attachable is Fish fish)
         {
-            _baits.Clear();
+            ///TODO: attach visuals
+            //_baits.Clear();
         }
     }
 
