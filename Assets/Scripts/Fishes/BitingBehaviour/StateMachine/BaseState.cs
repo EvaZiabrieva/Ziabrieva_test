@@ -10,6 +10,7 @@ public abstract class BaseState
     {
         Debug.Log($"{this} started");
         _stateMachine = stateMachine;
+        StartInternal();
     }
 
     public abstract void Update();

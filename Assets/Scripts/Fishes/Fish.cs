@@ -2,7 +2,6 @@ using UnityEngine;
 
 public class Fish : MonoBehaviour, IHookAttachable
 {
-    [SerializeField] private LayerMask _obsticlesLayerMask;
     private FishData _fishData;
     private BaseFishView _view;
     private BaseFishBehaviour _behaviour;
@@ -10,6 +9,7 @@ public class Fish : MonoBehaviour, IHookAttachable
     private FishVisualsContainer _container;
     public FishData Data => _fishData;
     public BaseFishBehaviour Behaviour => _behaviour;
+    public BaseFishBehaviourController Controller => _controller;
     public FishVisualsContainer VisualsContainer => _container;
 
     public GameObject Visuals => gameObject;
@@ -33,7 +33,7 @@ public class Fish : MonoBehaviour, IHookAttachable
     public void OnBit()
     {
         _view.SetWaterVisualsState(true);
-        _controller.Initialize(_obsticlesLayerMask);
+        _controller.Initialize();
     }
 
     public void OnRelease()

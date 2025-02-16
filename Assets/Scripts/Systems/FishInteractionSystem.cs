@@ -35,38 +35,18 @@ public class FishInteractionSystem : MonoBehaviour, ISystem
         }
 
         _currentFish = _spawnSystem.CreateFish(parent);
+        _currentFish.Controller.Initialize();
 
         _baits.AddRange(baits);
     }
-    public void StartBite()
+
+    public void InvokeOnFishBiteTheBait(float strength)
     {
-        FishBehaviourData data = _currentFish.Data.BehaviourData;
-
-        float baitAttractiveness = 0;
-
-        foreach (BaseBait bait in _baits)
-        {
-            baitAttractiveness += bait.AttractivenessStrenght;
-        }
-
-        float delay = Random.Range(data.BitDelayRange.min, data.BitDelayRange.max) / baitAttractiveness;
-        int bitesCount = Random.Range(data.BitesCountRange.min, data.BitesCountRange.max + 1);
-
-        StartCoroutine(DelayedBitingCo(_currentFish, delay, bitesCount, data.BitesDelayRange));
+        OnFishBitTheBait?.Invoke(strength);
     }
 
-    private IEnumerator DelayedBitingCo(Fish fish, float delay, int bitesCount, RangeFloat bitesDelayRange)
+    public void InvokeOnFishBit(Fish fish)
     {
-        yield return new WaitForSeconds(delay);
-
-        for (int i = 0; i < bitesCount; i++)
-        {
-            OnFishBitTheBait?.Invoke(fish.Data.BehaviourData.Strength);
-            float bitesDelay = bitesDelayRange.random;
-            yield return new WaitForSeconds(bitesDelay);
-        }
-
-        fish.OnBit();
         OnFishBit?.Invoke(fish);
     }
 }

@@ -49,10 +49,11 @@ public class FishBehaviourData
     [field: SerializeField] public RangeFloat ChangeDirectionDelayRange { get; private set; }
     [field: SerializeField] public RangeFloat XDirectionRange { get; private set; }
     [field: SerializeField] public RangeFloat ZDirectionRange { get; private set; }
+    [field: SerializeField] public LayerMask ObstaclesLayerMask { get; private set; }
 
     public FishBehaviourData(float strength, RangeFloat bitDelayRange, RangeInt bitesCountRange, 
                              RangeFloat bitesDelayRange, RangeFloat changeDirectionDelayRange, 
-                             RangeFloat xDirectionRange, RangeFloat zDirectionRange)
+                             RangeFloat xDirectionRange, RangeFloat zDirectionRange, LayerMask mask)
     {
         Strength = strength;
         BitDelayRange = bitDelayRange;
@@ -61,5 +62,6 @@ public class FishBehaviourData
         ChangeDirectionDelayRange = changeDirectionDelayRange;
         XDirectionRange = xDirectionRange;
         ZDirectionRange = zDirectionRange;
+        ObstaclesLayerMask = mask;
     }
 }

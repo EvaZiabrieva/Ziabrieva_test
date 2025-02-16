@@ -12,22 +12,20 @@ public class FollowTargetState : BaseState
         }
     }
 
-    private Transform _fish;
     private Transform _target;
     private float _desiredDistance;
 
-    public FollowTargetState(Transform fish, Transform target)
+    public FollowTargetState(Transform target)
     {
-        _fish = fish;
         _target = target;
         _desiredDistance = 0.1f; //default offset to check we close enough
     }
 
     public override void Update()
     {
-        Vector3 direction = (_target.position - _fish.position).normalized;
+        Vector3 direction = (_target.position - _stateMachine.Behaviour.CurrentPosition).normalized;
         _stateMachine.Behaviour.Pull(direction);
     }
 
-    private float GetDistanceToTarget() => Vector3.Distance(_target.position, _fish.position);
+    private float GetDistanceToTarget() => Vector3.Distance(_target.position, _stateMachine.Behaviour.CurrentPosition);
 }

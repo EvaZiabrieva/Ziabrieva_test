@@ -87,16 +87,16 @@ public class FishingProgressSystem : MonoBehaviour, ISystem, IUpdatable
             OnFishingFinished?.Invoke(false);
         }
     }
-    private void OnDrawGizmos()
-    {
-        if(!Application.isPlaying) 
-            return;
+    //private void OnDrawGizmos()
+    //{
+    //    if(!Application.isPlaying) 
+    //        return;
 
-        Gizmos.color = Color.red;
-        Gizmos.DrawRay(_fishingPole.PoleTip.position, _fishingPoleDirection);
-        Gizmos.color = Color.white;
-        Gizmos.DrawRay(_fish.transform.position, _fishDirection);
-    }
+    //    Gizmos.color = Color.red;
+    //    Gizmos.DrawRay(_fishingPole.PoleTip.position, _fishingPoleDirection);
+    //    Gizmos.color = Color.white;
+    //    Gizmos.DrawRay(_fish.transform.position, _fishDirection);
+    //}
     private Vector3 GetDirection(Vector3 from, Vector3 to)
     {
         Vector3 direction = (to - from).normalized;

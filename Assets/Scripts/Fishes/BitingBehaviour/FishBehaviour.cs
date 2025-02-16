@@ -3,11 +3,13 @@ using UnityEngine;
 public class FishBehaviour : BaseFishBehaviour
 {
     private Transform _fishTransform;
+    public override Vector3 CurrentPosition => _fishTransform.position;
 
     public FishBehaviour(FishBehaviourData data, Transform fishTransform) : base(data)
     {
         _fishTransform = fishTransform;
     }
+
 
     public override void Bite()
     {

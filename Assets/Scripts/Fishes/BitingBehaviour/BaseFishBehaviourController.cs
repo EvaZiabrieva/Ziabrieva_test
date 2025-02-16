@@ -9,7 +9,7 @@ public abstract class BaseFishBehaviourController : IUpdatable
         _fish = fish;
     }
 
-    public abstract void Initialize(LayerMask _obsticlesLayerMask);
+    public abstract void Initialize();
     public abstract void Shutdown();
     public abstract void ExecuteUpdate();
 }

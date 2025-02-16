@@ -6,60 +6,36 @@ public class FishBehaviourController : BaseFishBehaviourController
     private FishInteractionSystem _fishInteractionSystem;
     private FishBehaviourData _data;
     private FishBehaviourStateMachine _stateMachine;
-    private float _delay;
-    private float _timer;
-    private Vector3 _direciton;
     private Transform _target;
-    private LayerMask _layerMask;
 
     public FishBehaviourController(Fish fish, Transform target) : base(fish) 
     {
         _target = target;
-
         _updatableSystem = SystemsContainer.GetSystem<UpdatableSystem>();
         _fishInteractionSystem = SystemsContainer.GetSystem<FishInteractionSystem>();
-        InitializeStateMachine();
-
-        _updatableSystem.RegisterUpdatable(this);
     }
 
     private void InitializeStateMachine()
     {
-        FollowTargetState followState = new FollowTargetState(_fish.transform, _target);
+        FollowTargetState followState = new FollowTargetState(_target);
         _stateMachine = new FishBehaviourStateMachine(_fish.Behaviour, followState);
+        BiteTheBaitState biteTheBaitState = new BiteTheBaitState(_data.BitesDelayRange, _data.BitesCountRange.random, _data.Strength, _fish);
+        _stateMachine.EnqueueOneTimeState(biteTheBaitState);
+        MoveToRandomDirectionState randomDirectionState = new MoveToRandomDirectionState(_data.ChangeDirectionDelayRange, _data);
+        _stateMachine.EnqueueRepetableState(randomDirectionState);
     }
 
-    public void MoveToTarget()
-    {
-        Vector3 direction = (_target.position - _fish.transform.position).normalized;
-        _fish.transform.position += direction * Time.deltaTime;
-
-        if(Vector3.Distance(_fish.transform.position, _target.position) <= 0.1)
-        {
-            _updatableSystem.UnRegisterUpdatable(this);
-            _fishInteractionSystem.StartBite();
-        }
-    }
-
-    //TODO: get LayerMask from config
-    public override void Initialize(LayerMask _obsticlesLayerMask)
+    public override void Initialize()
     {
         _data = _fish.Data.BehaviourData;
-
-        RangeFloat delayRange = _data.ChangeDirectionDelayRange;
-        _delay = delayRange.random;
-
-        RangeFloat xRange = _data.XDirectionRange;
-        RangeFloat zRange = _data.ZDirectionRange;
-        _direciton = GetRandomDirection(xRange, zRange);
-
-        _timer = 0;
+        InitializeStateMachine();
+        _stateMachine.Start();
         _updatableSystem.RegisterUpdatable(this);
-        _layerMask = _obsticlesLayerMask;
     }
 
     public override void Shutdown()
     {
+        _stateMachine.Stop();
         _updatableSystem.UnRegisterUpdatable(this);
     }
 
@@ -67,6 +43,4 @@ public class FishBehaviourController : BaseFishBehaviourController
     {
        _stateMachine.Update();
     }
-
-    private Vector3 GetRandomDirection(RangeFloat xRange, RangeFloat zRange) => new Vector3(xRange.random, 0, zRange.random);
 }
