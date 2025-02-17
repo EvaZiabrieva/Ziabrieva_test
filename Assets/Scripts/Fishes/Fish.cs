@@ -41,7 +41,8 @@ public class Fish : MonoBehaviour, IHookAttachable
         if (Visuals != null)
         {
             Visuals.transform.parent = bucket;
-            Visuals.transform.position = bucket.position;
+            Visuals.transform.rotation = Quaternion.Euler(new Vector3(0, 0, 90));
+            Visuals.transform.localPosition = Vector3.zero;
             Visuals.AddComponent<Rigidbody>();
         }
         
