@@ -56,7 +56,7 @@ public class FishingPole : MonoBehaviour, IGrabable
         _baitingController.Initialize();
         _hook.Initialize();
         _bobber.Initialize();
-        _bobber.OnWaterDetected += _hook.OnWaterDetectedHandler;
+        _bobber.OnWaterEntered += _hook.OnWaterDetectedHandler;
     }
     public void OnDrop()
     {
@@ -64,7 +64,7 @@ public class FishingPole : MonoBehaviour, IGrabable
         _baitingController.Shutdown();
         _hook.Shutdown();
         _bobber.Shutdown();
-        _bobber.OnWaterDetected -= _hook.OnWaterDetectedHandler;
+        _bobber.OnWaterEntered -= _hook.OnWaterDetectedHandler;
     }
 
     private void SetFinishedView(bool isSuccessful)

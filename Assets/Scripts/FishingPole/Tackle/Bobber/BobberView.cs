@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class BobberView : BaseBobberView, IFixedUpdatable
@@ -25,12 +26,14 @@ public class BobberView : BaseBobberView, IFixedUpdatable
     {
         _fishInteractionSystem.OnFishBit += OnFishBitHandler;
         _fishInteractionSystem.OnFishBitTheBait += OnFishBitTheBaitHandler;
+        _fishInteractionSystem.OnFishingFinished += OnFishingFinishedHandler;
     }
 
     public override void Shutdown()
     {
         _fishInteractionSystem.OnFishBit -= OnFishBitHandler;
         _fishInteractionSystem.OnFishBitTheBait -= OnFishBitTheBaitHandler;
+        _fishInteractionSystem.OnFishingFinished -= OnFishingFinishedHandler;
     }
 
     public void ExecuteFixedUpdate()
@@ -42,13 +45,18 @@ public class BobberView : BaseBobberView, IFixedUpdatable
         }
     }
 
-    public override void OnFishBitHandler(Fish fish)
+    protected override void OnFishBitHandler(Fish fish)
     {
         _waterHeight -= 1;
         Rigidbody.transform.parent = fish.transform;
     }
 
-    public override void OnFishBitTheBaitHandler(float strength)
+    protected override void OnFishingFinishedHandler(bool result)
+    {
+        Rigidbody.transform.parent = null;
+    }
+
+    protected override void OnFishBitTheBaitHandler(float strength)
     {
         Rigidbody.AddForce(-Vector3.up * strength * BITING_STRENGTH, ForceMode.Impulse);
     }

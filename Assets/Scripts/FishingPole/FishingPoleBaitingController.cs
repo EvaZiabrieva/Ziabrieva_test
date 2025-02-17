@@ -19,19 +19,27 @@ public class FishingPoleBaitingController : BaseFishingPoleBaitingController
     public override void Initialize()
     {
         _fishInteractionSystem.OnFishBit += OnFishBitHandler;
+        _fishInteractionSystem.OnFishingFinished += OnFishingFinishedHandler;
+    }
+
+    private void OnFishingFinishedHandler(bool result)
+    {
+        _fishingPole.FishingReel.RevertTension();
+        _updatableSystem.UnRegisterUpdatable(this);
     }
 
     //TODO: implement fish released logic
     private void OnFishBitHandler(Fish fish)
     {
         _baitedFish = fish;
-        _fishingPole.FishingReel.ApplyTension(_baitedFish.Data.BehaviourData.Strength);
+        _fishingPole.FishingReel.ApplyTension(_baitedFish.Data.Tension);
         _updatableSystem.RegisterUpdatable(this);
     }
 
     public override void Shutdown()
     {
         _fishInteractionSystem.OnFishBit -= OnFishBitHandler;
+        _fishInteractionSystem.OnFishingFinished -= OnFishingFinishedHandler;
     }
 
     public override void ExecuteUpdate()
