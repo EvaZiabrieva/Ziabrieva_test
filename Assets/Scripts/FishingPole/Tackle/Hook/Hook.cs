@@ -23,6 +23,9 @@ public class Hook : BaseHook
     }
     public override void Initialize()
     {
+        if (_grabableSystem.ContainsHookAttachable)
+            CheckForAttach();
+
         _attachDetector.OnAttach += _view.Attach;
         _attachDetector.OnAttach += OnAttachHandler;
 
@@ -47,7 +50,7 @@ public class Hook : BaseHook
     {
         if (currentBaitCount < Data.BaitCapacity)
         {
-            _attachDetector.enabled = true;
+            _attachDetector.isActive = true;
             _view.SetReadyToAttachVisual();
         }
         else
@@ -58,7 +61,7 @@ public class Hook : BaseHook
 
     public override void SetDefault()
     {
-        _attachDetector.enabled = false;
+        _attachDetector.isActive = false;
         _view.SetDefaultVisual();
     }
 
@@ -73,7 +76,7 @@ public class Hook : BaseHook
 
     private void OnAttachHandler(IHookAttachable attachable)
     {
-        _attachDetector.enabled = false;
+        _attachDetector.isActive = false;
 
         //TODO: remove this cast
         if(attachable is BaseBait bait)
