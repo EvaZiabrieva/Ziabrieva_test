@@ -15,6 +15,7 @@ public abstract class BaseFishingReel
     public abstract float GetLength();
     public abstract float SetAngle(float angle);
     public abstract void ApplyTension(float tension);
+    public abstract void RevertTension();
 }
 
 public class FishingReelData

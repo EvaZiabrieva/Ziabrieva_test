@@ -15,6 +15,7 @@ public class FishingPole : MonoBehaviour, IGrabable
     private BasePole _pole;
 
     private UpdatableSystem _updatableSystem;
+    private FishingProgressSystem _progressSystem;
     private BaseFishingPoleController _fishingPoleController;
     private BaseFishingPoleBaitingController _baitingController;
 
@@ -42,6 +43,10 @@ public class FishingPole : MonoBehaviour, IGrabable
         _hook.AttachDetector.enabled = false;
         _fishingReel.SetRange(0, 360 * (_fishingLine.View.MaxLength / _fishingReel.Data.RoundLength));
         _updatableSystem = SystemsContainer.GetSystem<UpdatableSystem>();
+
+        _progressSystem = SystemsContainer.GetSystem<FishingProgressSystem>();
+        _progressSystem.OnFishingFinished += SetFinishedView;
+
         SystemsContainer.GetSystem<FishingProgressSystem>().RegisterFishingPole(this);
     }
 
@@ -60,5 +65,17 @@ public class FishingPole : MonoBehaviour, IGrabable
         _hook.Shutdown();
         _bobber.Shutdown();
         _bobber.OnWaterDetected -= _hook.OnWaterDetectedHandler;
+    }
+
+    private void SetFinishedView(bool isSuccessful)
+    {
+        _fishingReel.RevertTension();
+        _fishingReel.SetAngle(0);
+
+        _bobber.View.Rigidbody.transform.parent = null;
+        if (isSuccessful)
+        {
+            //tell hook to set visuals
+        }
     }
 }

@@ -4,26 +4,23 @@ using UnityEngine;
 
 public class FishInteractionSystem : MonoBehaviour, ISystem
 {
-    [SerializeField] private List<Fish> _fishes;
-
-    public bool IsInitialized => _fishes != null;
+    public bool IsInitialized => _spawnSystem != null;
 
     public event System.Action<float> OnFishBitTheBait;
     public event System.Action<Fish> OnFishBit;
 
     private SpawnSystem _spawnSystem;
+    private FishingProgressSystem _progressSystem;
     private List<BaseBait> _baits = new List<BaseBait>();
     private Fish _currentFish;
 
     public void Initialize()
     {
-        _fishes = new List<Fish>();
         _spawnSystem = SystemsContainer.GetSystem<SpawnSystem>();
     }
 
-    public void Shutdown()
+    public void Shutdown() 
     {
-        _fishes = null;
     }
 
     public void SetupFish(List<BaseBait> baits, Transform parent)
@@ -53,6 +50,11 @@ public class FishInteractionSystem : MonoBehaviour, ISystem
         yield return new WaitForSeconds(delay);
         _currentFish.Controller.Initialize();
     }
+    private void StopFishing(bool isSuccessful)
+    {
+        _currentFish.Controller.Shutdown();
+        _progressSystem.OnFishingFinished -= StopFishing;
+    }
     public void InvokeOnFishBiteTheBait(float strength)
     {
         OnFishBitTheBait?.Invoke(strength);
@@ -61,5 +63,8 @@ public class FishInteractionSystem : MonoBehaviour, ISystem
     public void InvokeOnFishBit(Fish fish)
     {
         OnFishBit?.Invoke(fish);
+        //TODO: resolve conflict with FishingProgressSystem Init
+        _progressSystem = SystemsContainer.GetSystem<FishingProgressSystem>();
+        _progressSystem.OnFishingFinished += StopFishing;
     }
 }

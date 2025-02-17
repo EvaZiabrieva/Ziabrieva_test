@@ -15,4 +15,5 @@ public abstract class BaseFishView
     }
 
     public abstract void SetWaterVisualsState(bool activeState);
+    public abstract GameObject GetFishVisuals();
 }

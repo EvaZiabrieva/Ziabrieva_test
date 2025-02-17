@@ -3,15 +3,19 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.XR.Interaction.Toolkit.AffordanceSystem.Receiver.Primitives;
 
 public class FishingProgressSystem : MonoBehaviour, ISystem, IUpdatable
 {
     private const float DESIRED_ANGLE = 180;
     private const float CASHED_POINTS_COUNT = -0.5f;
 
+    [SerializeField] private Transform _fishBucket;
     [SerializeField] private Canvas _progressUI;
+
     [SerializeField] private Image _progressBar;
     [SerializeField] private float _availableCatchingAngleOffset;
+    //TODO: in configs
     [SerializeField] private RangeFloat _finishPointsRange;
 
     private FishingPole _fishingPole;
@@ -69,11 +73,12 @@ public class FishingProgressSystem : MonoBehaviour, ISystem, IUpdatable
         _fishingPoleDirection = _fishingPole.PoleTip.forward;
         _fishDirection = GetDirection(_fishingPole.PoleTip.position, _fish.transform.position);
 
-        float angle = Vector3.Angle(_fishingPoleDirection, _fishDirection);
+        float currLenght = _fishingPole.FishingReel.GetLength();
+        float angle = Vector2.Angle(_fishingPoleDirection, _fishDirection);
         float absAngleOffset = Mathf.Abs(angle);
 
         float earnedPoints = Mathf.InverseLerp(_availableCatchingAngleOffset * 2, 0, absAngleOffset);
-        _currentPoints += (earnedPoints + CASHED_POINTS_COUNT) * Time.deltaTime;
+        _currentPoints += (earnedPoints  + CASHED_POINTS_COUNT) * Time.deltaTime;
         _progressBar.fillAmount = _currentPoints/ _finishPointsRange.max;
 
         if(_currentPoints >= _finishPointsRange.max)
@@ -91,7 +96,10 @@ public class FishingProgressSystem : MonoBehaviour, ISystem, IUpdatable
         Vector3 direction = (to - from).normalized;
         return direction;
     } 
-
+    public void OnContinue()
+    {
+        _fish.Reattach(_fishBucket);
+    }
     private void CalculateResults()
     {
 

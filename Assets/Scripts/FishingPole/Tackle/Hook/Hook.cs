@@ -67,6 +67,8 @@ public class Hook : BaseHook
         //TODO: add fail chance 
         _baits[0].OnReattach();
         _baits.RemoveAt(0);
+
+        _view.Attach(fish);
     }
 
     private void OnAttachHandler(IHookAttachable attachable)
@@ -77,11 +79,6 @@ public class Hook : BaseHook
         if(attachable is BaseBait bait)
         {
             _baits.Add(bait);
-        }
-        if(attachable is Fish fish)
-        {
-            ///TODO: attach visuals
-            //_baits.Clear();
         }
     }
 

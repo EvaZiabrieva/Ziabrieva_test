@@ -7,12 +7,13 @@ public class Fish : MonoBehaviour, IHookAttachable
     private BaseFishBehaviour _behaviour;
     private BaseFishBehaviourController _controller;
     private FishVisualsContainer _container;
+    private FishingProgressSystem _progressSystem;
     public FishData Data => _fishData;
     public BaseFishBehaviour Behaviour => _behaviour;
     public BaseFishBehaviourController Controller => _controller;
     public FishVisualsContainer VisualsContainer => _container;
 
-    public GameObject Visuals => gameObject;
+    public GameObject Visuals => _view.GetFishVisuals();
 
     public bool ReadyToAttach => true;
 
@@ -22,24 +23,33 @@ public class Fish : MonoBehaviour, IHookAttachable
         _fishData = data;
         _view = view;
         _behaviour = behaviour;
-        _controller = controller;  
-    }
+        _controller = controller;
 
-    public void OnAttach()
+        _progressSystem = SystemsContainer.GetSystem<FishingProgressSystem>();
+    }
+    private void ToggleVisuals(bool isSuccessful)
     {
-        _view.SetWaterVisualsState(true);
+        if (isSuccessful)
+            Visuals.SetActive(true);
+        else
+        {
+            Destroy(Visuals);
+        }
     }
-
-    public void OnBit()
+    public void Reattach(Transform bucket)
     {
-        _view.SetWaterVisualsState(true);
-        //_controller.Initialize();
+        if (Visuals != null)
+        {
+            Visuals.transform.parent = bucket;
+            Visuals.transform.position = bucket.position;
+            Visuals.AddComponent<Rigidbody>();
+        }
+        
+        Destroy(gameObject);
     }
 
-    public void OnRelease()
+    public void OnAttach() 
     {
-        _view.SetWaterVisualsState(false);
-        //_controller.Shutdown();
+        _progressSystem.OnFishingFinished += ToggleVisuals;
     }
-
 }

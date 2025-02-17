@@ -55,9 +55,6 @@ public class BobberView : BaseBobberView, IFixedUpdatable
 
     public override void OnWaterDetected()
     {
-        _bobberVisualsContainer.ParticleSystem.gameObject.SetActive(true);
-        _bobberVisualsContainer.ParticleSystem.Play();
-
         Vector3 rotation = new Vector3(Rigidbody.transform.rotation.x, Rigidbody.transform.rotation.y, 0);
          Rigidbody.transform.rotation = Quaternion.Euler(rotation);
         Rigidbody.freezeRotation = true;
