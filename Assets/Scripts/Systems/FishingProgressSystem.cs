@@ -6,7 +6,6 @@ public class FishingProgressSystem : MonoBehaviour, ISystem, IUpdatable
 {
     private const float DESIRED_ANGLE = 180;
     private const float CASHED_POINTS_COUNT = -0.5f;
-    private const float DESIRED_REELING_DELTA = 0.02f;
     private const float REELING_MULTIPLIER_POWER = 150f;
 
     [SerializeField] private Transform _fishBucket;
@@ -78,8 +77,6 @@ public class FishingProgressSystem : MonoBehaviour, ISystem, IUpdatable
         float reelingDelta = (_previousLength - currLenght);
 
         float pointsMultiplier = (reelingDelta * REELING_MULTIPLIER_POWER * _fish.Data.Weight);
-
-        Debug.Log($">>> Multipier = {pointsMultiplier}");
 
         float angle = Vector2.Angle(_fishingPoleDirection, _fishDirection);
         float absAngleOffset = Mathf.Abs(angle);
