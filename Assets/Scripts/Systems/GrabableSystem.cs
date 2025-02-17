@@ -7,10 +7,12 @@ using UnityEngine.XR.Interaction.Toolkit;
 public class GrabableSystem : MonoBehaviour, ISystem
 {
     [SerializeField] private List<XRRayInteractor> _interactors = new List<XRRayInteractor>();
+    private bool _containsHookAttachable;
+
     public event Action OnAttachableGrab;
     public event Action OnAttachableDrop;
     public bool IsInitialized => _interactors != null;
-
+    public bool ContainsHookAttachable => _containsHookAttachable;
     public void Initialize()
     {
         foreach (var interactor in _interactors)
@@ -29,6 +31,7 @@ public class GrabableSystem : MonoBehaviour, ISystem
         if(arg0.TryGetComponent(out IHookAttachable hookAttachable))
         {
             OnAttachableGrab?.Invoke();
+            _containsHookAttachable = true;
         }
     }
     private void OnDrop(XRBaseInteractable arg0)
@@ -40,6 +43,7 @@ public class GrabableSystem : MonoBehaviour, ISystem
         if (arg0.TryGetComponent(out IHookAttachable hookAttachable))
         {
             OnAttachableDrop?.Invoke();
+            _containsHookAttachable = false;
         }
     }
     public void Shutdown()

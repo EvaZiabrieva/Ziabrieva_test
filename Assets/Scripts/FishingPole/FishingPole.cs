@@ -40,7 +40,7 @@ public class FishingPole : MonoBehaviour, IGrabable
         _fishingPoleController = fishingPoleController;
         _baitingController = baitingController;
 
-        _hook.AttachDetector.enabled = false;
+        _hook.AttachDetector.isActive = false;
         _fishingReel.SetRange(0, 360 * (_fishingLine.View.MaxLength / _fishingReel.Data.RoundLength));
         _updatableSystem = SystemsContainer.GetSystem<UpdatableSystem>();
 
