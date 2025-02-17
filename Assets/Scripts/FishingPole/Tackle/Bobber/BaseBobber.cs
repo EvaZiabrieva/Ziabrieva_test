@@ -3,7 +3,9 @@ using UnityEngine;
 
 public abstract class BaseBobber
 {
-    public abstract event Action OnWaterDetected;
+    public abstract event Action OnWaterEntered;
+    public abstract event Action OnWaterExited;
+
     protected BaseBobberView _view;
 
     public BaseBobberView View => _view;

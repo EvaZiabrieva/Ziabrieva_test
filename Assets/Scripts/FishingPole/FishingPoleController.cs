@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -8,13 +9,34 @@ public class FishingPoleController : BaseFishingPoleController
     private InputSystem _inputSystem;
     private InputAction _castingInput;
 
+    private float _debugReelingSpeedMultiplier = 5f;
+    private float _currentDebugReelingSpeedMultiplier;
+
+    #region DEBUG
+    private FishInteractionSystem _fishInteractionSystem;
+    #endregion
+
     private float currLenght = 0;
     public FishingPoleController(FishingPole pole, CastingTracker tracker) : base(pole, tracker) 
     {
+        _currentDebugReelingSpeedMultiplier = _debugReelingSpeedMultiplier;
         _inputSystem = SystemsContainer.GetSystem<InputSystem>();
+        _fishInteractionSystem = SystemsContainer.GetSystem<FishInteractionSystem>();
         _castingInput = _inputSystem.GetInputAction(Inputs.CASTING_NAME);
 
         _castingInput.started += AddSubscriber;
+        _fishInteractionSystem.OnFishBit += DebugOnFishBit;
+        _fishInteractionSystem.OnFishingFinished += DebugOnFishingFinish;
+    }
+
+    private void DebugOnFishingFinish(bool result)
+    {
+        _currentDebugReelingSpeedMultiplier = _debugReelingSpeedMultiplier;
+    }
+
+    private void DebugOnFishBit(Fish fish)
+    {
+        _currentDebugReelingSpeedMultiplier = _debugReelingSpeedMultiplier * (fish.Data.Weight * fish.Data.BehaviourData.Strength);
     }
 
     public override void ExecuteUpdate()
@@ -27,13 +49,13 @@ public class FishingPoleController : BaseFishingPoleController
         if (Input.GetKey(KeyCode.Space))
         {
             currLenght = lenght / _fishingPole.FishingLine.View.MaxLength;
-            currLenght += Time.deltaTime / 5;
+            currLenght += Time.deltaTime / _currentDebugReelingSpeedMultiplier;
             _fishingPole.FishingReel.SetAngle(currLenght);
         }
         if (Input.GetKey(KeyCode.RightControl))
         {
             currLenght = lenght / _fishingPole.FishingLine.View.MaxLength;
-            currLenght -= Time.deltaTime / 5;
+            currLenght -= Time.deltaTime / _currentDebugReelingSpeedMultiplier;
             _fishingPole.FishingReel.SetAngle(currLenght);
         }
 

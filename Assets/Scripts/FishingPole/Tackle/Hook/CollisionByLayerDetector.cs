@@ -5,19 +5,28 @@ using UnityEngine;
 public class CollisionByLayerDetector : MonoBehaviour
 {
     [SerializeField] private LayerMask layerMask;
-    public event Action OnWaterDetected;
+    public event Action OnEnterDetected;
+    public event Action OnExitDetected;
     public bool IsActive { get; set; }
 
     private void OnTriggerEnter(Collider other)
     {
-        if(!IsActive)
+        if (!IsActive)
         {
             return;
         }
 
         if (layerMask.Contains(other.gameObject.layer))
         {
-            OnWaterDetected?.Invoke();
+            OnEnterDetected?.Invoke();
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (layerMask.Contains(other.gameObject.layer))
+        {
+            OnEnterDetected?.Invoke();
         }
     }
 }

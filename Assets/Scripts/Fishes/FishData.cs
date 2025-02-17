@@ -16,6 +16,7 @@ public class FishData
     [field: SerializeField] public int Level { get; private set; }
     [field: SerializeField] public Rarity Rarity { get; private set; }
     [field: SerializeField] public FishBehaviourData BehaviourData { get; private set; }
+    public float Tension => Weight * BehaviourData.Strength;
 
     public FishData(string id, float weight, int points, int level, 
                     Rarity rarity, FishBehaviourData behavioutData)

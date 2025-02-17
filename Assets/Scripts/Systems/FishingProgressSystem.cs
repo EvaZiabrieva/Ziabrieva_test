@@ -1,14 +1,13 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.XR.Interaction.Toolkit.AffordanceSystem.Receiver.Primitives;
 
 public class FishingProgressSystem : MonoBehaviour, ISystem, IUpdatable
 {
     private const float DESIRED_ANGLE = 180;
     private const float CASHED_POINTS_COUNT = -0.5f;
+    private const float DESIRED_REELING_DELTA = 0.02f;
+    private const float REELING_MULTIPLIER_POWER = 150f;
 
     [SerializeField] private Transform _fishBucket;
     [SerializeField] private Canvas _progressUI;
@@ -28,6 +27,7 @@ public class FishingProgressSystem : MonoBehaviour, ISystem, IUpdatable
     private Vector2 _fishDirection;
 
     private float _currentPoints;
+    private float _previousLength;
 
     public bool IsInitialized => _interactionSystem != null;
     public event Action<bool> OnFishingFinished;
@@ -59,6 +59,7 @@ public class FishingProgressSystem : MonoBehaviour, ISystem, IUpdatable
     {
         _fish = fish;
         _progressUI.gameObject.SetActive(true);
+        _previousLength = _fishingPole.FishingReel.GetLength();
         _updatableSystem.RegisterUpdatable(this);
         _currentPoints = _finishPointsRange.max / 2;
     }
@@ -74,11 +75,17 @@ public class FishingProgressSystem : MonoBehaviour, ISystem, IUpdatable
         _fishDirection = GetDirection(_fishingPole.PoleTip.position, _fish.transform.position);
 
         float currLenght = _fishingPole.FishingReel.GetLength();
+        float reelingDelta = (_previousLength - currLenght);
+
+        float pointsMultiplier = (reelingDelta * REELING_MULTIPLIER_POWER * _fish.Data.Weight);
+
+        Debug.Log($">>> Multipier = {pointsMultiplier}");
+
         float angle = Vector2.Angle(_fishingPoleDirection, _fishDirection);
         float absAngleOffset = Mathf.Abs(angle);
 
-        float earnedPoints = Mathf.InverseLerp(_availableCatchingAngleOffset * 2, 0, absAngleOffset);
-        _currentPoints += (earnedPoints  + CASHED_POINTS_COUNT) * Time.deltaTime;
+        float earnedPoints = Mathf.InverseLerp(_availableCatchingAngleOffset * 2, 0, absAngleOffset) * pointsMultiplier;
+        _currentPoints += (earnedPoints + CASHED_POINTS_COUNT) * Time.deltaTime;
         _progressBar.fillAmount = _currentPoints/ _finishPointsRange.max;
 
         if(_currentPoints >= _finishPointsRange.max)
@@ -90,6 +97,8 @@ public class FishingProgressSystem : MonoBehaviour, ISystem, IUpdatable
         {
             OnFishingFinished?.Invoke(false);
         }
+
+        _previousLength = currLenght;
     }
     private Vector3 GetDirection(Vector3 from, Vector3 to)
     {

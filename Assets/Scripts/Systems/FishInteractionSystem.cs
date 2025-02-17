@@ -8,18 +8,21 @@ public class FishInteractionSystem : MonoBehaviour, ISystem
 
     public event System.Action<float> OnFishBitTheBait;
     public event System.Action<Fish> OnFishBit;
+    public event System.Action<bool> OnFishingFinished;
 
     private SpawnSystem _spawnSystem;
     private FishingProgressSystem _progressSystem;
     private List<BaseBait> _baits = new List<BaseBait>();
     private Fish _currentFish;
 
+    private Coroutine _followDelayCoroutine;
+
     public void Initialize()
     {
         _spawnSystem = SystemsContainer.GetSystem<SpawnSystem>();
     }
 
-    public void Shutdown() 
+    public void Shutdown()
     {
     }
 
@@ -37,10 +40,14 @@ public class FishInteractionSystem : MonoBehaviour, ISystem
             baitAttractiveness += bait.AttractivenessStrenght;
         }
 
-        _currentFish = _spawnSystem.CreateFish(parent);
+        if (_currentFish == null)
+        {
+            _currentFish = _spawnSystem.CreateFish(parent);
+        }
+
         float delay = Random.Range(_currentFish.Data.BehaviourData.BitDelayRange.min, _currentFish.Data.BehaviourData.BitDelayRange.max) / baitAttractiveness;
 
-        StartCoroutine(WaitUntillFollowCo(delay));
+        _followDelayCoroutine = StartCoroutine(WaitUntillFollowCo(delay));
 
         _baits.AddRange(baits);
     }
@@ -50,11 +57,15 @@ public class FishInteractionSystem : MonoBehaviour, ISystem
         yield return new WaitForSeconds(delay);
         _currentFish.Controller.Initialize();
     }
-    private void StopFishing(bool isSuccessful)
+
+    private void OnFishingFinishedHandler(bool result)
     {
         _currentFish.Controller.Shutdown();
-        _progressSystem.OnFishingFinished -= StopFishing;
+        _progressSystem.OnFishingFinished -= OnFishingFinishedHandler;
+        _currentFish = null;
+        OnFishingFinished?.Invoke(result);
     }
+
     public void InvokeOnFishBiteTheBait(float strength)
     {
         OnFishBitTheBait?.Invoke(strength);
@@ -65,6 +76,20 @@ public class FishInteractionSystem : MonoBehaviour, ISystem
         OnFishBit?.Invoke(fish);
         //TODO: resolve conflict with FishingProgressSystem Init
         _progressSystem = SystemsContainer.GetSystem<FishingProgressSystem>();
-        _progressSystem.OnFishingFinished += StopFishing;
+        _progressSystem.OnFishingFinished += OnFishingFinishedHandler;
+    }
+
+    public void AbortFishingProcess()
+    {
+        if (_followDelayCoroutine != null)
+        {
+            StopCoroutine(_followDelayCoroutine);
+            _followDelayCoroutine = null;
+        }
+
+        if (_currentFish != null)
+        {
+            _currentFish.Controller.Shutdown();
+        }
     }
 }
