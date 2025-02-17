@@ -12,7 +12,6 @@ public class FishInteractionSystem : MonoBehaviour, ISystem
 
     private SpawnSystem _spawnSystem;
     private FishingProgressSystem _progressSystem;
-    private List<BaseBait> _baits = new List<BaseBait>();
     private Fish _currentFish;
 
     private Coroutine _followDelayCoroutine;
@@ -45,11 +44,9 @@ public class FishInteractionSystem : MonoBehaviour, ISystem
             _currentFish = _spawnSystem.CreateFish(parent);
         }
 
-        float delay = Random.Range(_currentFish.Data.BehaviourData.BitDelayRange.min, _currentFish.Data.BehaviourData.BitDelayRange.max) / baitAttractiveness;
+        float delay = _currentFish.Data.BehaviourData.BitDelayRange.random / baitAttractiveness;
 
         _followDelayCoroutine = StartCoroutine(WaitUntillFollowCo(delay));
-
-        _baits.AddRange(baits);
     }
 
     private IEnumerator WaitUntillFollowCo(float delay)
