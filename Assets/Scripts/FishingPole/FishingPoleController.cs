@@ -1,6 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -11,6 +8,7 @@ public class FishingPoleController : BaseFishingPoleController
     private InputSystem _inputSystem;
     private InputAction _castingInput;
 
+    private float currLenght = 0;
     public FishingPoleController(FishingPole pole, CastingTracker tracker) : base(pole, tracker) 
     {
         _inputSystem = SystemsContainer.GetSystem<InputSystem>();
@@ -19,10 +17,25 @@ public class FishingPoleController : BaseFishingPoleController
         _castingInput.started += AddSubscriber;
     }
 
-    public override void Update()
+    public override void ExecuteUpdate()
     {
         _fishingPole.FishingLine.View.SetLenght(GetCurrentLenght());
         _fishingPole.Bobber.UpdateOffset(GetCurrentLenght());
+
+        //Can be removed because used for debug
+        float lenght = GetCurrentLenght();
+        if (Input.GetKey(KeyCode.Space))
+        {
+            currLenght = lenght / _fishingPole.FishingLine.View.MaxLength;
+            currLenght += Time.deltaTime / 5;
+            _fishingPole.FishingReel.SetAngle(currLenght);
+        }
+        if (Input.GetKey(KeyCode.RightControl))
+        {
+            currLenght = lenght / _fishingPole.FishingLine.View.MaxLength;
+            currLenght -= Time.deltaTime / 5;
+            _fishingPole.FishingReel.SetAngle(currLenght);
+        }
 
         if (_castingInput.IsPressed())
         {
@@ -36,8 +49,7 @@ public class FishingPoleController : BaseFishingPoleController
             }
         }
     }
-    private float GetCurrentLenght() =>
-        (_fishingPole.FishingReel.GetAngle() / 360) * _fishingPole.FishingReel.RoundLenght;
+    private float GetCurrentLenght() => _fishingPole.FishingReel.GetLength();
 
     private void AddSubscriber(InputAction.CallbackContext callbackContext)
     {

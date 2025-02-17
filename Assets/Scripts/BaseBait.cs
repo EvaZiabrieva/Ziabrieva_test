@@ -13,6 +13,7 @@ public abstract class BaseBait : MonoBehaviour, IHookAttachable, IGrabable
     public bool ReadyToAttach => _grabable;
 
     public abstract void OnAttach();
+    public abstract void OnReattach();
 
     public void OnGrab() => _grabable = true;
     public void OnDrop() => _grabable = false;    

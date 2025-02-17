@@ -16,5 +16,5 @@ public abstract class BaseFishingPoleController : IUpdatable
         _trackedDistanceTreshold = 1;
     }
 
-    public abstract void Update();
+    public abstract void ExecuteUpdate();
 }

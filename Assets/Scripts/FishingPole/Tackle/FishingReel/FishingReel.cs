@@ -1,24 +1,43 @@
-using System.Collections;
-using System.Collections.Generic;
 using Unity.VRTemplate;
 using UnityEngine;
 
 public class FishingReel : BaseFishingReel
 {
     private XRKnob _knob;
-    public FishingReel(BaseFishingReelView fishingReelView, XRKnob knob, float roundLenght)
+    private RangeFloat _knobRange;
+    private float _currRoundLenght;
+    private float _currntTension;
+    public FishingReel(BaseFishingReelView view, FishingReelData data, XRKnob knob) : base(view, data)
     {
-        _view = fishingReelView;
         _knob = knob;
-        _roundLenght = roundLenght;
+        _currRoundLenght = _data.RoundLength;
     }
-    public override float GetAngle() => Mathf.Lerp(_knob.minAngle, _knob.maxAngle, _knob.value);
+
+    public override void ApplyTension(float tension)
+    {
+        _currntTension = tension;
+        _knobRange.max *= _currntTension;
+        _knob.maxAngle = _knobRange.max;
+        _currRoundLenght /= _currntTension;
+    }
+
+    public override void RevertTension()
+    {
+        _knobRange.max /= _currntTension;
+        _knob.maxAngle = _knobRange.max;
+        _currRoundLenght *= _currntTension;
+    }
+
+    public override float GetLength() => Mathf.Lerp(_knob.minAngle, _knob.maxAngle, _knob.value) / 360 * _currRoundLenght;
 
     public override float SetAngle(float angle) => _knob.value = angle;
 
     public override void SetRange(float minAngle, float maxAngle)
     {
-        _knob.minAngle = minAngle;
-        _knob.maxAngle = maxAngle;
+        _knobRange.min = minAngle;
+        _knobRange.max = maxAngle;
+
+        _knob.minAngle = _knobRange.min;
+        _knob.maxAngle = _knobRange.max;
     }
 }

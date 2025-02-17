@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class CastingTracker : IUpdatable
@@ -9,7 +7,7 @@ public class CastingTracker : IUpdatable
     private Vector3 _trackedPosition;
     private float _fixedTimeStep;
     private float _timer;
-
+    private UpdatableSystem _updatableSystem;
     public float TrackedDistance => Vector3.Distance(_trackerTransform.position, _trackedPosition);
     public Vector3 TrackedDirection => (_trackedPosition - _trackerTransform.position).normalized;
     public CastingTracker(Transform tracker)
@@ -18,9 +16,10 @@ public class CastingTracker : IUpdatable
 
         //TODO: get value from configs
         _fixedTimeStep = 0.1f;
+        _updatableSystem = SystemsContainer.GetSystem<UpdatableSystem>();
     }
 
-    public void Update()
+    public void ExecuteUpdate()
     {
         _timer += Time.deltaTime;
         if (_timer >= _fixedTimeStep)
@@ -33,12 +32,12 @@ public class CastingTracker : IUpdatable
     public void OnBeforeCast()
     {
         _trackedPosition = _trackerTransform.position;
-        SystemsContainer.GetSystem<UpdatableSystem>().RegisterUpdatable(this);
+        _updatableSystem.RegisterUpdatable(this);
     }
 
     public void OnAfterCast()
     {
         _trackedPosition = _trackerTransform.position;
-        SystemsContainer.GetSystem<UpdatableSystem>().UnRegisterUpdatable(this);
+        _updatableSystem.UnRegisterUpdatable(this);
     }
 }
