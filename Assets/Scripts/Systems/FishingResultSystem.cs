@@ -2,37 +2,44 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using static UnityEngine.GraphicsBuffer;
 
-public class FishingResultSystem : MonoBehaviour, ISystem
+public class FishingResultSystem : MonoBehaviour, ISystem, IUpdatable
 {
     [SerializeField] private Canvas _resultsCanvas;
-    [SerializeField] private Transform _playerCameraTransform;
+    [SerializeField] private float _distanceOffset;
+    [SerializeField] private float  _canvasFollowingSpeed;
     [SerializeField] private Text _resultTitle;
     [SerializeField] private Button _continueButton;
     [SerializeField] private string _successesfulTitle;
     [SerializeField] private string _failTitle;
 
     private FishingProgressSystem _progressSystem;
+    private UpdatableSystem _updatableSystem;
     public bool IsInitialized => _progressSystem != null;
 
     public void Initialize()
     {
+        _updatableSystem = SystemsContainer.GetSystem<UpdatableSystem>();
         _progressSystem = SystemsContainer.GetSystem<FishingProgressSystem>();
+
         _progressSystem.OnFishingFinished += ShowResults;
         _continueButton.onClick.AddListener(_progressSystem.OnContinue);
+        _continueButton.onClick.AddListener(HideCanvas);
     }
 
     public void Shutdown()
     {
         _progressSystem.OnFishingFinished -= ShowResults;
         _continueButton.onClick.RemoveListener(_progressSystem.OnContinue);
+        _continueButton.onClick.RemoveListener(HideCanvas);
     }
 
     private void ShowResults(bool isSuccessful)
     {
+        _updatableSystem.RegisterUpdatable(this);
         _resultsCanvas.gameObject.SetActive(true);
-        //TODO: normal view + do offset + not needed position
-        _resultsCanvas.transform.position = new Vector3 (_playerCameraTransform.forward.x, _playerCameraTransform.forward.y + 1, _playerCameraTransform.forward.z);
+
         if (isSuccessful)
         {
             _resultTitle.text = _successesfulTitle;
@@ -41,5 +48,23 @@ public class FishingResultSystem : MonoBehaviour, ISystem
         {
             _resultTitle.text = _failTitle;
         }
+    }
+    private void HideCanvas()
+    {
+        _updatableSystem.UnRegisterUpdatable(this);
+        _resultsCanvas.gameObject.SetActive(false);
+    }
+
+    public void ExecuteUpdate()
+    {
+        Camera camera = Camera.main;
+
+        Vector3 fakeForward = camera.transform.forward;
+        fakeForward.y = 0.0f;
+        fakeForward.Normalize();
+
+        _resultsCanvas.transform.position = Vector3.Lerp(_resultsCanvas.transform.position, camera.transform.position + fakeForward * _distanceOffset, Time.deltaTime * _canvasFollowingSpeed);
+        _resultsCanvas.transform.LookAt(camera.transform);
+        _resultsCanvas.transform.Rotate(0, 180, 0);
     }
 }
