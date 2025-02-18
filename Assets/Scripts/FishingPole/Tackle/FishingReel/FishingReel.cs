@@ -6,7 +6,7 @@ public class FishingReel : BaseFishingReel
     private XRKnob _knob;
     private RangeFloat _knobRange;
     private float _currRoundLenght;
-    private float _currntTension;
+    private float _currntTension = 1;
     public FishingReel(BaseFishingReelView view, FishingReelData data, XRKnob knob) : base(view, data)
     {
         _knob = knob;
@@ -26,6 +26,7 @@ public class FishingReel : BaseFishingReel
         _knobRange.max /= _currntTension;
         _knob.maxAngle = _knobRange.max;
         _currRoundLenght *= _currntTension;
+        _currntTension = 1;
     }
 
     public override float GetLength() => Mathf.Lerp(_knob.minAngle, _knob.maxAngle, _knob.value) / 360 * _currRoundLenght;

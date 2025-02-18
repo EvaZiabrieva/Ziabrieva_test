@@ -3,7 +3,7 @@ using UnityEngine;
 
 public abstract class BaseBobber
 {
-    public abstract event Action OnWaterEntered;
+    public abstract event Action<float> OnWaterEntered;
     public abstract event Action OnWaterExited;
 
     protected BaseBobberView _view;

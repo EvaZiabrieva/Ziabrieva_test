@@ -22,9 +22,6 @@ public class FishingProgressSystem : MonoBehaviour, ISystem, IUpdatable
     private FishInteractionSystem _interactionSystem;
     private UpdatableSystem _updatableSystem;
 
-    private Vector2 _fishingPoleDirection;
-    private Vector2 _fishDirection;
-
     private float _currentPoints;
     private float _previousLength;
 
@@ -70,15 +67,16 @@ public class FishingProgressSystem : MonoBehaviour, ISystem, IUpdatable
 
     public void ExecuteUpdate()
     {
-        _fishingPoleDirection = _fishingPole.PoleTip.forward;
-        _fishDirection = GetDirection(_fishingPole.PoleTip.position, _fish.transform.position);
+        Vector3 poleTipForward = _fishingPole.PoleTip.forward;
+        Vector2 fishingPoleDirection = new Vector2(poleTipForward.x, poleTipForward.z);
+        Vector2 desiredDirection = GetDirection(_fishingPole.PoleTip.position, _fish.transform.position);
 
         float currLenght = _fishingPole.FishingReel.GetLength();
         float reelingDelta = (_previousLength - currLenght);
 
         float pointsMultiplier = (reelingDelta * REELING_MULTIPLIER_POWER * _fish.Data.Weight);
 
-        float angle = Vector2.Angle(_fishingPoleDirection, _fishDirection);
+        float angle = Vector2.Angle(fishingPoleDirection, desiredDirection);
         float absAngleOffset = Mathf.Abs(angle);
 
         float earnedPoints = Mathf.InverseLerp(_availableCatchingAngleOffset * 2, 0, absAngleOffset) * pointsMultiplier;
@@ -97,15 +95,18 @@ public class FishingProgressSystem : MonoBehaviour, ISystem, IUpdatable
 
         _previousLength = currLenght;
     }
-    private Vector3 GetDirection(Vector3 from, Vector3 to)
+
+    private Vector2 GetDirection(Vector3 from, Vector3 to)
     {
         Vector3 direction = (to - from).normalized;
-        return direction;
+        return new Vector2(direction.x, direction.z);
     } 
+
     public void OnContinue()
     {
         _fish.Reattach(_fishBucket);
     }
+
     private void CalculateResults()
     {
 
