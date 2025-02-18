@@ -73,9 +73,5 @@ public class FishingPole : MonoBehaviour, IGrabable
         _fishingReel.SetAngle(0);
 
         _bobber.View.Rigidbody.transform.parent = null;
-        if (isSuccessful)
-        {
-            //tell hook to set visuals
-        }
     }
 }

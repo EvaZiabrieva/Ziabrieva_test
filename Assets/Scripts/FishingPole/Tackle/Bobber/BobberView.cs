@@ -56,6 +56,7 @@ public class BobberView : BaseBobberView, IFixedUpdatable
     {
         _waterHeight -= 1;
         Rigidbody.transform.parent = fish.transform;
+        ParticleSystem.Emit(1);
     }
 
     protected override void OnFishingFinishedHandler(bool result)
@@ -66,6 +67,7 @@ public class BobberView : BaseBobberView, IFixedUpdatable
     protected override void OnFishBitTheBaitHandler(float strength)
     {
         Rigidbody.AddForce(-Vector3.up * strength * BITING_STRENGTH, ForceMode.Impulse);
+        ParticleSystem.Emit(1);
     }
 
     public override void OnWaterEnter(float height)
@@ -79,6 +81,7 @@ public class BobberView : BaseBobberView, IFixedUpdatable
         _waterResistanceMultiplier = INWATER_DRAG;
 
         _updatableSystem.RegisterFixedUpdatable(this);
+        ParticleSystem.Emit(1);
     }
 
     public override void OnWaterExit()

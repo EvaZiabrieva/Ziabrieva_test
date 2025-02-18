@@ -5,10 +5,12 @@ public abstract class BaseBobberView
 {
     protected BobberVisualsContainer _bobberVisualsContainer;
     public Rigidbody Rigidbody { get; protected set; }
+    public ParticleSystem ParticleSystem { get; protected set; }
     public BaseBobberView(BobberVisualsContainer bobberVisualsContainer, Rigidbody rigidbody)
     {
         _bobberVisualsContainer = bobberVisualsContainer;
         Rigidbody = rigidbody;
+        ParticleSystem = _bobberVisualsContainer.ParticleSystem;
     }
     public abstract void Initialize();
     public abstract void Shutdown();
