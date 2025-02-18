@@ -5,8 +5,9 @@ using UnityEngine.UI;
 public class FishingProgressSystem : MonoBehaviour, ISystem, IUpdatable
 {
     private const float DESIRED_ANGLE = 180;
-    private const float CASHED_POINTS_COUNT = -0.5f;
+    private const float CASHED_POINTS_COUNT = -0.2f;
     private const float REELING_MULTIPLIER_POWER = 150f;
+    private const float GRAMMS_IN_KILO = 100f;
 
     [SerializeField] private Transform _fishBucket;
     [SerializeField] private Canvas _progressUI;
@@ -24,9 +25,11 @@ public class FishingProgressSystem : MonoBehaviour, ISystem, IUpdatable
 
     private float _currentPoints;
     private float _previousLength;
+    private float _results; 
 
     public bool IsInitialized => _interactionSystem != null;
     public event Action<bool> OnFishingFinished;
+    public event Action<float, float> OnGetResults;
 
     public void RegisterFishingPole(FishingPole fishingPole)
     {
@@ -42,13 +45,16 @@ public class FishingProgressSystem : MonoBehaviour, ISystem, IUpdatable
         OnFishingFinished += OnFishingFinishedHandler;
     }
 
-    private void OnFishingFinishedHandler(bool result)
+    private void OnFishingFinishedHandler(bool isSuccessful)
     {
         _updatableSystem.UnRegisterUpdatable(this);
         _progressUI.gameObject.SetActive(false);
 
-        if(result)
+        if (isSuccessful)
+        {
             CalculateResults();
+            OnGetResults?.Invoke(_results, _fish.Data.Weight / GRAMMS_IN_KILO);
+        }
     }
 
     private void OnFishBitHandler(Fish fish)
@@ -81,7 +87,7 @@ public class FishingProgressSystem : MonoBehaviour, ISystem, IUpdatable
 
         float earnedPoints = Mathf.InverseLerp(_availableCatchingAngleOffset * 2, 0, absAngleOffset) * pointsMultiplier;
         _currentPoints += (earnedPoints + CASHED_POINTS_COUNT) * Time.deltaTime;
-        _progressBar.fillAmount = _currentPoints/ _finishPointsRange.max;
+        _progressBar.fillAmount = _currentPoints / _finishPointsRange.max;
 
         if(_currentPoints >= _finishPointsRange.max)
         {
@@ -109,6 +115,6 @@ public class FishingProgressSystem : MonoBehaviour, ISystem, IUpdatable
 
     private void CalculateResults()
     {
-
+        _results = (_fish.Data.Weight / GRAMMS_IN_KILO) * _fish.Data.Level * (int)_fish.Data.Rarity;
     }
 }

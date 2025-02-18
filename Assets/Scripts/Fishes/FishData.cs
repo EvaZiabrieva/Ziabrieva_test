@@ -4,7 +4,8 @@ using UnityEngine;
 [Serializable]
 public enum Rarity
 {
-    Common, Rare,
+    Common = 1, 
+    Rare = 2,
 }
 
 [Serializable]

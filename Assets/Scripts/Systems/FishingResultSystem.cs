@@ -7,8 +7,13 @@ using static UnityEngine.GraphicsBuffer;
 public class FishingResultSystem : MonoBehaviour, ISystem, IUpdatable
 {
     [SerializeField] private Canvas _resultsCanvas;
+    [SerializeField] private GameObject _statistic;
+    [SerializeField] private Text _pointsText;
+    [SerializeField] private Text _weightText;
+    [SerializeField] private Text _totalScoreText;
+
     [SerializeField] private float _distanceOffset;
-    [SerializeField] private float  _canvasFollowingSpeed;
+    [SerializeField] private float _canvasFollowingSpeed;
     [SerializeField] private Text _resultTitle;
     [SerializeField] private Button _continueButton;
     [SerializeField] private string _successesfulTitle;
@@ -16,6 +21,7 @@ public class FishingResultSystem : MonoBehaviour, ISystem, IUpdatable
 
     private FishingProgressSystem _progressSystem;
     private UpdatableSystem _updatableSystem;
+    private float _totalScore = 0;
     public bool IsInitialized => _progressSystem != null;
 
     public void Initialize()
@@ -24,6 +30,8 @@ public class FishingResultSystem : MonoBehaviour, ISystem, IUpdatable
         _progressSystem = SystemsContainer.GetSystem<FishingProgressSystem>();
 
         _progressSystem.OnFishingFinished += ShowResults;
+        _progressSystem.OnGetResults += ShowStatistic;
+
         _continueButton.onClick.AddListener(_progressSystem.OnContinue);
         _continueButton.onClick.AddListener(HideCanvas);
     }
@@ -49,10 +57,24 @@ public class FishingResultSystem : MonoBehaviour, ISystem, IUpdatable
             _resultTitle.text = _failTitle;
         }
     }
+    private void ShowStatistic(float points, float weight)
+    {
+        _statistic.SetActive(true);
+
+        _pointsText.text = $"Earned: {points} points";
+        _weightText.text = $"Fish weigth: {weight} kilo";
+        UpdateTotalScore(points);
+    }
+    private void UpdateTotalScore(float points)
+    {
+        _totalScore += points;
+        _totalScoreText.text = _totalScore.ToString();
+    }
     private void HideCanvas()
     {
         _updatableSystem.UnRegisterUpdatable(this);
         _resultsCanvas.gameObject.SetActive(false);
+        _statistic.SetActive(false);
     }
 
     public void ExecuteUpdate()
