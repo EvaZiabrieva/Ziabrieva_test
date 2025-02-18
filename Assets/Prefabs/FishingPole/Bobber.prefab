@@ -4823,7 +4823,7 @@ GameObject:
   - component: {fileID: 6014580548557703412}
   - component: {fileID: 7485487679424735662}
   - component: {fileID: 756743301317377116}
-  - component: {fileID: 6358952324318365938}
+  - component: {fileID: 3669840948510749977}
   m_Layer: 6
   m_Name: BobberVisual
   m_TagString: Untagged
@@ -4838,8 +4838,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3600347525441067116}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 7.914998, y: 37.742, z: 0.57500076}
+  m_LocalRotation: {x: -0.10705357, y: -0.021614933, z: 0.19672993, w: -0.974356}
+  m_LocalPosition: {x: 21.98, y: 31.257, z: 7.46}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -4897,8 +4897,8 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &6358952324318365938
-BoxCollider:
+--- !u!135 &3669840948510749977
+SphereCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -4908,8 +4908,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.3154068, y: 0.62976456, z: 0.21604961}
-  m_Center: {x: -7.675913, y: -38.059494, z: -0.4149786}
+  m_Radius: 0.51
+  m_Center: {x: -7.64, y: -38.29, z: -0.45}
 --- !u!1 &7259205040361976527
 GameObject:
   m_ObjectHideFlags: 0

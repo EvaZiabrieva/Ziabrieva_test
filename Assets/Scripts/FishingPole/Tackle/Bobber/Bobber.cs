@@ -10,7 +10,7 @@ public class Bobber : BaseBobber
     private FishInteractionSystem _fishInteractionSystem;
     private CollisionByLayerDetector _waterDetector;
 
-    public override event Action OnWaterEntered
+    public override event Action<float> OnWaterEntered
     {
         add => _waterDetector.OnEnterDetected += value; 
         remove => _waterDetector.OnEnterDetected -= value; 
@@ -34,12 +34,14 @@ public class Bobber : BaseBobber
     public override void Initialize()
     {
         OnWaterEntered += OnWaterEnteredHandler;
+        OnWaterExited += OnWaterExitedHandler;
         _view.Initialize();
     }
 
     public override void Shutdown()
     {
         OnWaterEntered -= OnWaterEnteredHandler;
+        OnWaterExited -= OnWaterExitedHandler;
         _view.Shutdown();
     }
 
@@ -62,14 +64,15 @@ public class Bobber : BaseBobber
         _joint.linearLimit = currentLimit;
     }
     
-    private void OnWaterEnteredHandler()
+    private void OnWaterEnteredHandler(float height)
     {
         _waterDetector.IsActive = false;
-        _view.OnWaterDetected();
+        _view.OnWaterEnter(height);
     }
 
     private void OnWaterExitedHandler()
     {
         _fishInteractionSystem.AbortFishingProcess();
+        _view.OnWaterExit();
     }
 }

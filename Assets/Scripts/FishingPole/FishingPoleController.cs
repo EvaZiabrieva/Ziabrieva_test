@@ -9,7 +9,7 @@ public class FishingPoleController : BaseFishingPoleController
     private InputSystem _inputSystem;
     private InputAction _castingInput;
 
-    private float _debugReelingSpeedMultiplier = 5f;
+    private float _debugReelingSpeedMultiplier = 6f;
     private float _currentDebugReelingSpeedMultiplier;
 
     #region DEBUG

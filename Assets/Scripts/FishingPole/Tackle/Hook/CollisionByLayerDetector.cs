@@ -5,7 +5,7 @@ using UnityEngine;
 public class CollisionByLayerDetector : MonoBehaviour
 {
     [SerializeField] private LayerMask layerMask;
-    public event Action OnEnterDetected;
+    public event Action<float> OnEnterDetected;
     public event Action OnExitDetected;
     public bool IsActive { get; set; }
 
@@ -18,7 +18,8 @@ public class CollisionByLayerDetector : MonoBehaviour
 
         if (layerMask.Contains(other.gameObject.layer))
         {
-            OnEnterDetected?.Invoke();
+            float height = other.bounds.max.y;
+            OnEnterDetected?.Invoke(height);
         }
     }
 
@@ -26,7 +27,7 @@ public class CollisionByLayerDetector : MonoBehaviour
     {
         if (layerMask.Contains(other.gameObject.layer))
         {
-            OnEnterDetected?.Invoke();
+            OnExitDetected?.Invoke();
         }
     }
 }

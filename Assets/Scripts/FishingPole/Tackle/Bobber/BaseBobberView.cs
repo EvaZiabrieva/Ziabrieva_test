@@ -15,5 +15,6 @@ public abstract class BaseBobberView
     protected abstract void OnFishBitTheBaitHandler(float strength);
     protected abstract void OnFishBitHandler(Fish fish);
     protected abstract void OnFishingFinishedHandler(bool result);
-    public abstract void OnWaterDetected();
+    public abstract void OnWaterEnter(float height);
+    public abstract void OnWaterExit();
 }

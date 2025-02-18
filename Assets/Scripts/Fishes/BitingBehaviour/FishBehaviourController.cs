@@ -35,7 +35,7 @@ public class FishBehaviourController : BaseFishBehaviourController
 
     public override void Shutdown()
     {
-        _stateMachine.Stop();
+        _stateMachine?.Stop();
         _updatableSystem.UnRegisterUpdatable(this);
     }
 
